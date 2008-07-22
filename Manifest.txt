@@ -65,6 +65,7 @@ lib/rad/variable_processing.rb
 lib/rad/init.rb
 lib/rad/todo.txt
 lib/rad/tasks/build_and_make.rake
+lib/rad/developer.rake
 lib/rad/tasks/rad.rb
 lib/rad/version.rb
 lib/rad/generators/makefile/makefile.erb
