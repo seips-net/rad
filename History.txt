@@ -1,3 +1,17 @@
+== 0.2.6 2008-07-30
+* Tres grand update:
+	- added support for spectra_soft_pots
+	- added support and examples for blinkMs
+	- added multi sensor hysteresis -- formerly one sensor only
+	- added testing for plugin loading
+	- external arrays now have cool instance style plus 
+	- drop down the metal style declarations
+	- iteration on external arrays now works. internal still problematic
+	- defines now work handily
+	- numerous lcd library changes plus enhancements: setxy 0,1, "print_something"
+	- lots of examples
+	- and much more
+
 == 0.2.5 2008-07-21
 * 1ish large post Bastille Day update:
 	- added i2c capability
