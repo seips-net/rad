@@ -6,7 +6,7 @@ class RADProcessor < RubyToAnsiC
     unless defined? @translator then
       @translator = CompositeSexpProcessor.new
       @translator << RADRewriter.new
-      @translator << TypeChecker.new
+      @translator << RADTypeChecker.new
       @translator << R2CRewriter.new
       @translator << self.new
       @translator.on_error_in(:defn) do |processor, exp, err|
@@ -34,6 +34,47 @@ class RADProcessor < RubyToAnsiC
   def process_ivar(exp)
     name = exp.shift
     "__#{name.to_s.sub(/^@/, '')}"
+  end
+  
+  def process_iter(exp)
+    # the array identifer may be in one of two locations
+    # when using the instance variable (ivar) style it is located at exp[0][1][1]
+    if exp[0][1][1]
+      enum = exp[0][1][1]
+      enum = "__#{enum.to_s.sub(/^@/, '')}" if enum.to_s =~ /^@/
+    # for local variables it is located at exp[0][1][2]  
+    elsif exp[0][1][2]
+      enum = exp[0][1][2]
+    end
+    
+    out = []
+    # Only support enums in C-land # not sure if this comment if valid anymore
+    raise UnsupportedNodeError if exp[0][1].nil? # HACK ugly
+    @env.scope do
+      
+      call = process exp.shift
+      var  = process(exp.shift).intern # semi-HACK-y 
+      body = process exp.shift
+      
+      # array types from varible_processing>post_process_arrays and arduino_sketch>array
+      $array_types.each do |k,v|
+            @array_type = v if k == enum.to_s.sub(/^__/,"")
+      end
+      
+      index_helper = $array_index_helpers.shift
+      index = "index_#{index_helper}" # solves redeclaration issue
+
+      body += ";" unless body =~ /[;}]\Z/
+      body.gsub!(/\n\n+/, "\n")
+
+      out << "unsigned int #{index};" # shouldn't need more than int
+      out << "for (#{index} = 0; #{index} < (int) (sizeof(#{enum}) / sizeof(#{enum}[0])); #{index}++) {"   
+      out << "#{@array_type} #{var} = #{enum}[#{index}];"
+      out << body
+      out << "}"
+    end
+
+    return out.join("\n")
   end
     
   def process_lasgn(exp)

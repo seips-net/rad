@@ -1,6 +1,6 @@
 module ExternalVariableProcessing
-  # issues
-  # testing
+  # issues 
+  # testing 
   # add checking for colon
 
     
@@ -42,11 +42,11 @@ module ExternalVariableProcessing
             type = var
             value = nil
             post_process_vars(name, type, value)
-            return
+          else
+            value = var.split(",").first.lstrip
+            type = var.split(",")[1].nil? ?  nil : var.split(",")[1].lstrip
+            translate_variables( name , type, value )
           end
-          value = var.split(",").first.lstrip
-          type = var.split(",")[1].nil? ?  nil : var.split(",")[1].lstrip
-          translate_variables( name , type, value )
         when TrueClass
           # puts "pre_process: #{name}, #{var}, #{var.inspect} got #{var.class} on 50"
           value = 1
@@ -57,12 +57,13 @@ module ExternalVariableProcessing
           value = 0
           type = "bool"
           post_process_vars(name, type, value)
+        when Array
+          post_process_arrays(name, var)
         else
-          raise ArgumentError, "error message here.. got #{name}" 
-        end
-		    
-      
+          raise ArgumentError, "not sure what to do here...  got #{name} with value #{var} which is a #{var.class}" 
+        end      
     end     
+    
     
     def translate_variables(name, type = nil, value = nil)
       
@@ -75,6 +76,16 @@ module ExternalVariableProcessing
         # puts "translate_variables: #{name}, #{value}, #{type} is a fixnum, got #{value.class} on 74"
       elsif value.class == Float 
         # puts "translate_variables: #{name}, #{value}, #{type} is a float, got #{value.class} on 76"
+      elsif value =~ /^-(\d|x)*$/ 
+        value = value.to_i
+        type = "int" if type.nil?
+      elsif value =~ /^-(\d|\.|x)*$/ 
+        value = value.to_f
+        unless type.nil?
+          raise ArgumentError, "#{value} should be a float got  #{type}" unless type == "float"
+        end
+        type = "float" if type.nil?   
+
       elsif value[0,1] !~ /\d/
         # puts value[0,1]
         # puts "translate_variables: #{name}, #{value}, #{type} is a number of some type, got #{value.class} on 79"
@@ -101,16 +112,42 @@ module ExternalVariableProcessing
 
     
     def post_process_vars(name, type, value = nil)
-      value = " = #{value}" if value
-      
+      value = " = #{value}" if value 
       $external_var_identifiers << "__#{name}" unless $external_var_identifiers.include?("__#{name}")
       $external_vars << "#{type} __#{name}#{value};"
+    end
+    
+    def post_process_arrays(name, var)
+      type = c_type(var[0])
+      $array_types[name] = type
+      assignment = var.inspect.gsub("[","{").gsub("]","}")      
+      c_style_array = "#{type} __#{name}[] = #{assignment};"
+      $external_var_identifiers << "__#{name}" unless $external_var_identifiers.include?("__#{name}")
+      $external_array_vars << c_style_array unless $external_array_vars.include?(c_style_array)
     end
     
     def check_variable_type(type)
       unless type =~ /#{C_VAR_TYPES}/
         raise ArgumentError, "the following variable types are supported \n #{C_VAR_TYPES.gsub("|",", ")} got #{type}" 
       end
+    end
+    
+    def c_type(typ)
+      type = 
+        case typ 
+        when Integer
+          "int"
+        when String
+          "char*"
+        when TrueClass
+          "bool"
+        when FalseClass
+          "bool"
+        else
+          raise "Bug! Unknown type #{typ.inspect} in c_type"
+        end
+
+        type
     end
    
 end

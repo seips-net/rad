@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + "/../init.rb")
 require 'ruby_to_ansi_c'
 
-C_VAR_TYPES = "unsigned|int|long|double|str|char|byte"
+C_VAR_TYPES = "unsigned|int|long|double|str|char|byte|bool"
 
 # incredibly primitive tests 
 # rake test:compile or rake test:upload
@@ -55,14 +55,14 @@ namespace :make do
   end
   
   desc "generate a makefile and use it to compile the .cpp using the current .cpp file"
-  task :compile_cpp => ["build:sketch_dir", :clean_sketch_dir] do # should also depend on "build:sketch"
+  task :compile_cpp => ["build:sketch_dir", "build:gather_required_plugins", "build:plugin_setup", "build:setup", :clean_sketch_dir] do # should also depend on "build:sketch"
     Makefile.compose_for_sketch( @test_dir + @sketch_name )
     # not allowed? sh %{export PATH=#{Makefile.software_params[:arduino_root]}/tools/avr/bin:$PATH}
     sh %{cd #{RAD_ROOT}/#{@test_dir + @sketch_name}; make depend; make}
   end
   
   desc "generate a makefile and use it to compile the .cpp and upload it using current .cpp file"
-  task :upload_cpp => ["build:sketch_dir", :clean_sketch_dir] do # should also depend on "build:sketch"
+  task :upload_cpp => ["build:sketch_dir", "build:gather_required_plugins", "build:plugin_setup", "build:setup", :clean_sketch_dir] do # should also depend on "build:sketch"
     Makefile.compose_for_sketch( @test_dir + @sketch_name )
     # not allowed? sh %{export PATH=#{Makefile.software_params[:arduino_root]}/tools/avr/bin:$PATH}
     sh %{cd #{RAD_ROOT}/#{@test_dir + @sketch_name}; make depend; make upload}
@@ -70,7 +70,7 @@ namespace :make do
   
   task :clean_sketch_dir => ["build:file_list", "build:sketch_dir"] do
     @sketch_name = @sketch_class.split(".").first
-    FileList.new(Dir.entries("#{RAD_ROOT}/#{@test_dir + @sketch_name}")).exclude("#{@test_dir + @sketch_name}.cpp").exclude(/^\./).each do |f|
+    FileList.new(Dir.entries("#{RAD_ROOT}/#{@test_dir + @sketch_name}")).exclude("#{@sketch_name}.cpp").exclude(/^\./).each do |f|
       sh %{rm #{RAD_ROOT}/#{@test_dir + @sketch_name}/#{f}}
     end
   end

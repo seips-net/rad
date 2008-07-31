@@ -64,8 +64,7 @@ void SWSerLCDsf::begin(long speed)
 
   digitalWrite(_transmitPin, HIGH);
   delayMicroseconds( _bitPeriod); // if we were low this establishes the end
-  delay(20);
-  clearscr();
+  delay(50);
   if (_geometry)
   	setgeo(_geometry);
 }
@@ -142,7 +141,7 @@ void SWSerLCDsf::print(long n, int base)
     printNumber(n, base);
 }
 
-// -------- PHA unique codes -------------------------
+// -------- Spark Fun unique codes -------------------------
 
 void SWSerLCDsf::clearscr(void)
 {
@@ -151,12 +150,52 @@ void SWSerLCDsf::clearscr(void)
   delay(100);
 }
 
-void SWSerLCDsf::home(void)
+void SWSerLCDsf::clearscr(const char *s)
 {
-  print((uint8_t) 0xFE);
-  print((uint8_t) 0x80);
-  delay(10);
+	clearscr();
+	print(s);
 }
+
+void SWSerLCDsf::clearscr(int n)
+{
+	clearscr();
+	print(n);
+}
+
+void SWSerLCDsf::setxy(byte x, byte y)
+{
+  byte posvar;
+  
+  switch (y) {
+    case 0:
+  		posvar = 128 + x;
+  		break;
+  	case 1:
+  		posvar = 192+ x;
+  		break;
+  	case 2:
+  		posvar = ((_cols == 16) ? 144 : 148) + x;
+  		break;
+  	case 3:
+  		posvar = ((_cols == 16) ? 208 : 212) + x;
+  		break;
+  }			
+  print((uint8_t) 0xFE);
+  print((uint8_t) posvar);
+}
+
+void SWSerLCDsf::setxy(byte x, byte y, const char *s)
+{
+	setxy(x,y);
+	print(s);
+}
+
+void SWSerLCDsf::setxy(byte x, byte y, int n)
+{
+	setxy(x,y);
+	print(n);
+}
+
 
 void SWSerLCDsf::setcmd(byte code, byte cmd)
 {
@@ -205,27 +244,7 @@ void SWSerLCDsf::setintensity(int intensity)
   delay(100);
 }
 
-void SWSerLCDsf::setxy(byte x, byte y)
-{
-  byte posvar;
-  
-  switch (y) {
-    case 0:
-  		posvar = 128 + x;
-  		break;
-  	case 1:
-  		posvar = 192+ x;
-  		break;
-  	case 2:
-  		posvar = ((_cols == 16) ? 144 : 148) + x;
-  		break;
-  	case 3:
-  		posvar = ((_cols == 16) ? 208 : 212) + x;
-  		break;
-  }			
-  print((uint8_t) 0xFE);
-  print((uint8_t) posvar);	
-}
+
 
 
 

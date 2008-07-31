@@ -62,11 +62,9 @@ void SWSerLCDpa::begin(long speed)
 
   digitalWrite(_transmitPin, HIGH);
   delayMicroseconds( _bitPeriod); // if we were low this establishes the end
-  delay(20);
-  clearscr();
+  delay(50);
   if (_geometry)
-  	setgeo(_geometry);
-  	
+	setgeo(_geometry);
 }
 
 void SWSerLCDpa::print(uint8_t b)
@@ -98,7 +96,7 @@ void SWSerLCDpa::print(const char *s)
 {
   while (*s) {
     print(*s++);
-    delay(1);
+    delay(2);
   }
 }
 
@@ -151,21 +149,69 @@ void SWSerLCDpa::println(void)
 void SWSerLCDpa::clearscr(void)
 {
   print("?f");
-  delay(100);
+  delay(30);
 }
 
-void SWSerLCDpa::home(void)
+void SWSerLCDpa::clearscr(const char *s)
 {
-  print("?a");
+	clearscr();
+    print(s);
+}
+
+void SWSerLCDpa::clearscr(int n)
+{
+	clearscr();
+    print(n);
+}
+
+void SWSerLCDpa::clearline(int line)
+{
+  setxy(0,line);
+  print("?l");
+  delay(20);
+}
+
+void SWSerLCDpa::clearline(int line, const char *s)
+{
+  clearline(line);
+  print(s);
+}
+
+void SWSerLCDpa::clearline(int line, int n)
+{
+  clearline(line);
+  print(n);
+}
+
+
+void SWSerLCDpa::setxy(int x, int y)
+{
+  print("?y");
+  print(y);	
+  print("?x");
+  if (x < 10)
+    print('0');
+  print(x);
   delay(10);
 }
 
+void SWSerLCDpa::setxy(int x, int y, const char *s)
+{
+	setxy(x,y);
+	print(s);
+}
+
+void SWSerLCDpa::setxy(int x, int y, int n)
+{
+	setxy(x,y);
+	print(n);
+}
 
 void SWSerLCDpa::setgeo(int geometry)
 {
-  print("?G");
-  print(geometry);
-  delay(200);
+	print("?G");
+	print(geometry);
+	delay(200);
 }
 
 void SWSerLCDpa::setintensity(int intensity)
@@ -187,17 +233,6 @@ void SWSerLCDpa::outofBignum(void)
   print("?<");
 }
 
-
-void SWSerLCDpa::setxy(int x, int y)
-{
-  print("?y");
-  print(y);	
-  print("?x");
-  if (x < 10)
-    print('0');
-  print(x);
-  delay(10);
-}
 
 
 void SWSerLCDpa::println(char c)
@@ -259,9 +294,9 @@ void SWSerLCDpa::printNumber(unsigned long n, uint8_t base)
     n /= base;
   }
 
-  for (; i > 0; i--)
+  for (; i > 0; i--) {
     print((char) (buf[i - 1] < 10 ? '0' + buf[i - 1] : 'A' + buf[i - 1] - 10));
-  
-  delay(8);
+	delay(2);
+  }
   
 }

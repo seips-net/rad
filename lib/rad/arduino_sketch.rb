@@ -163,14 +163,21 @@ class ArduinoSketch
   def initialize #:nodoc:
     @servo_settings = [] # need modular way to add this
     @debounce_settings = [] # need modular way to add this
+    @hysteresis_settings = []
+    @spectra_settings = []
     @servo_pins = [] 
     @debounce_pins = []
+    @hysteresis_pins = []
+    @spectra_pins = []
     $external_array_vars = [] 
     $external_vars =[]
     $external_var_identifiers = []
     $sketch_methods = []
     $load_libraries ||= []
     $defines  ||= []
+    $define_types = {}
+    $array_types = {}
+    $array_index_helpers = ('a'..'zz').to_a
 
     @declarations = []
     @pin_modes = {:output => [], :input => []}
@@ -295,20 +302,36 @@ class ArduinoSketch
     # array "char buffer[32]"
     # result: char buffer[32];
     # todo 
-    # need to feed array external array identifiers to rtc if they are in plugins or libraries
+    # need to feed array external array identifiers to rtc if they are in plugins or libraries, (not so sure about this will do more testing)
     def array(arg)
       if arg
           arg = arg.chomp.rstrip.lstrip
           name = arg.scan(/\s*(\w*)\[\d*\]?/).first.first
-          if /\w*\[\d*\]\s*\=\s*\{(.*)\}/ =~ arg
-            assignment = arg.scan(/\w*\[\d*\]\s*\=\s*\{(.*)\}/).first.first
-            array_size = assignment.split(",").length
-            if /\[(\s*)\]/ =~ arg
-              arg.gsub!(/(\[\d*\])/, "[#{array_size}]")
-            end
+          
+    # following 10 lines seem to be unnecessary
+    # and are left over from early array work
+    # but they are still here for a bit
+    # determine if there is an array assignement, and how many
+    # then eliminate the assignment and update the array size
+    #      if /\w*\[\d*\]\s*\=\s*\{(.*)\}/ =~ arg
+    #        assignment = arg.scan(/\w*\[\d*\]\s*\=\s*\{(.*)\}/).first.first
+    #        array_size = assignment.split(",").length
+    #        if /\[(\s*)\]/ =~ arg
+    #          arg.gsub!(/(\[\d*\])/, "[#{array_size}]")
+    #        end
+    #      end
+    #      arg = arg.scan(/^((\s*|\w*)*\s*\w*\[\d*\])?/).first.first
+
+          # help rad_processor do a better job with array types
+          types = ["int", "long", "char*", "unsigned int", "unsigned long", "byte", "bool", "float" ]
+          types.each_with_index do |type, i|
+            @type = types[i] if /#{type}/ =~ arg
           end
-          arg = arg.scan(/^((\s*|\w*)*\s*\w*\[\d*\])?/).first.first
+          raise ArgumentError, "type not currently supported.. got: #{arg}.  Currently supporting #{types.join(", ")}" unless @type
+
           arg = "#{arg};" unless arg[-1,1] == ";"
+          $array_types[name] = @type
+          @type = nil
           $external_var_identifiers << name unless $external_var_identifiers.include?(name)
           # add array_name declaration
           $external_array_vars << arg unless $external_array_vars.include?(arg)
@@ -317,30 +340,38 @@ class ArduinoSketch
     
     # define "DS1307_SEC 0"
     # result: #define DS1307_SEC 0
+    # note we send the constant identifiers and type to our rad_type_checker
+    # however, it only knows about long, float, str....
+    # so we don't send ints ...yet..
+    # need more testing
     def define(arg)
       if arg
           arg = arg.chomp.rstrip.lstrip
-          arg = "#define #{arg}"
+          name = arg.split(" ").first
+          value = arg.gsub!("#{name} ","")
+          # negative
+          if value =~ /^-(\d|x)*$/ 
+             type = "long"
+           # negative float
+           elsif value =~ /^-(\d|\.|x)*$/ 
+             type = "float" 
+           elsif value =~ /[a-zA-Z]/
+             type = "str"
+             value = "\"#{value}\""
+           elsif value !~ /(\.|x)/
+             type = "long"
+           elsif value =~ /(\d*\.\d*)/ # and no 
+             type = "float"
+           elsif value =~ /0x\d\d/
+             type = "byte"
+           else 
+             raise ArgumentError, "opps, could not determine the define type, got #{value}"
+           end
+          $define_types[name] = type
+          arg = "#define #{name} #{value}"
           $defines << arg
+          dummy_for_testing = arg, type
       end
-    end
-    
-    # need better location.. module?
-    def self.add_to_setup(meth) 
-      meth = meth.gsub("setup", "additional_setup")
-      post_process_ruby_to_c_methods(meth)
-    end
-    
-    def self.post_process_ruby_to_c_methods(e)      
-      clean_c_methods = []
-        # need to take a look at the \(unsigned in the line below not sure if we are really trying to catch something like that
-        if e !~ /^\s*(#{C_VAR_TYPES})(\W{1,6}|\(unsigned\()(#{$external_var_identifiers.join("|")})/ || $external_var_identifiers.empty?
-          # use the list of identifers the external_vars method of the sketch and remove the parens the ruby2c sometime adds to variables
-          # keep an eye on the gsub!.. are we getting nil errors
-          e.gsub!(/((#{$external_var_identifiers.join("|")})\(\))/, '\2')  unless $external_var_identifiers.empty? 
-          clean_c_methods << e
-        end
-        return clean_c_methods.join( "\n" )
     end
   
   # Configure a single pin for output and setup a method to refer to that pin, i.e.:
@@ -376,7 +407,7 @@ class ArduinoSketch
           return         
         when :freq_out || :freq_gen || :frequency_generator
           frequency_timer(num, opts)
-        return
+          return
         when :i2c
           two_wire(num, opts) unless @@twowire_inc
           return #
@@ -463,13 +494,17 @@ class ArduinoSketch
     servo(num, opts)
     # move this to better place ... 
     # should probably go along with servo code into plugin
-    @declarations << "void servo_refresh(void);"
-    helper_methods = []
-    helper_methods << "void servo_refresh(void)"
-    helper_methods << "{"
-    helper_methods <<  "\tServo::refresh();"
-    helper_methods << "}"
-    @helper_methods += "\n#{helper_methods.join("\n")}"
+    @@servo_dh ||= FALSE
+    if (@@servo_dh == FALSE)	# on second instance this stuff can't be repeated - BBR
+      @@servo_dh = TRUE
+      @declarations << "void servo_refresh(void);"
+      helper_methods = []
+      helper_methods << "void servo_refresh(void)"
+      helper_methods << "{"
+      helper_methods <<  "\tServo::refresh();"
+      helper_methods << "}"
+      @helper_methods += "\n#{helper_methods.join("\n")}"
+    end
   end
   
   ## this won't work at all... no pins
@@ -534,6 +569,18 @@ class ArduinoSketch
         prev = opts[:latch] == :on ? 0 : 1
         adjust = opts[:adjust] ? opts[:adjust] : 200
         @debounce_settings <<  "dbce[#{num}].state = #{state}, dbce[#{num}].read = 0, dbce[#{num}].prev = #{prev}, dbce[#{num}].time = 0, dbce[#{num}].adjust = #{adjust}"
+      end
+      if opts[:device] == :sensor
+        ArduinoPlugin.add_sensor_struct
+        count = @hysteresis_pins.length
+        @hysteresis_pins << num
+        @hysteresis_settings << "hyst[#{count}].pin = #{num}, hyst[#{count}].state = 0"
+      end
+      if opts[:device] == :spectra
+        ArduinoPlugin.add_spectra_struct
+        count = @spectra_pins.length
+        @spectra_pins << num
+        @spectra_settings << "spec[#{count}].pin = #{num}, spec[#{count}].state = 10, spec[#{count}].r1 = 0, spec[#{count}].r2 = 0, spec[#{count}].r3 = 0"
       end
       @declarations << "int _#{opts[ :as ]} = #{num};"
 
@@ -660,15 +707,36 @@ class ArduinoSketch
 	  			accessor << "void println(SWSerLCDpa& s) {"
   				accessor << "\treturn s.println();"
   				accessor << "}"
-  				accessor << "void clearscr(SWSerLCDpa& s) {"
+   				accessor << "void clearscr(SWSerLCDpa& s) {"
  	 			  accessor << "\treturn s.clearscr();"
   				accessor << "}"
-  				accessor << "void home(SWSerLCDpa& s) {"
-  				accessor << "\treturn s.home();"
+   				accessor << "void clearline(SWSerLCDpa& s, int line) {"
+ 	 			  accessor << "\treturn s.clearline( line );"
   				accessor << "}"
-  				accessor << "void setgeo( SWSerLCDpa& s, int i ) {"
-  				accessor << "\treturn s.setgeo( i );"
- 	 			  accessor << "}"
+  				accessor << "void setxy( SWSerLCDpa& s, int x, int y) {"
+  				accessor << "\treturn s.setxy( x, y );"
+  				accessor << "}"
+  				accessor << "void clearscr(SWSerLCDpa& s, const char *str) {"
+ 	 			  accessor << "\treturn s.clearscr(str);"
+  				accessor << "}"
+   				accessor << "void clearline(SWSerLCDpa& s, int line, const char *str) {"
+ 	 			  accessor << "\treturn s.clearline( line, str );"
+  				accessor << "}"
+  				accessor << "void setxy( SWSerLCDpa& s, int x, int y, const char *str) {"
+  				accessor << "\treturn s.setxy( x, y, str );"
+    			accessor << "}"
+  				accessor << "void clearscr(SWSerLCDpa& s, int n) {"
+ 	 			  accessor << "\treturn s.clearscr(n);"
+  				accessor << "}"
+   				accessor << "void clearline(SWSerLCDpa& s, int line, int n) {"
+ 	 			  accessor << "\treturn s.clearline( line, n );"
+  				accessor << "}"
+  				accessor << "void setxy( SWSerLCDpa& s, int x, int y, int n) {"
+  				accessor << "\treturn s.setxy( x, y, n );"
+    			accessor << "}"
+  				accessor << "void setgeo( SWSerLCDpa& s, int g) {"
+  				accessor << "\treturn s.setgeo( g );"
+  				accessor << "}"
   				accessor << "void setintensity( SWSerLCDpa& s, int i ) {"
   				accessor << "\treturn s.setintensity( i );"
   				accessor << "}"
@@ -677,9 +745,6 @@ class ArduinoSketch
   				accessor << "}"
   				accessor << "void outofBignum(SWSerLCDpa& s) {"
   				accessor << "\treturn s.outofBignum();"
-  				accessor << "}"
-  				accessor << "void setxy( SWSerLCDpa& s, int x, int y) {"
-  				accessor << "\treturn s.setxy( x, y );"
   				accessor << "}"
  	 			  accessor << "void println( SWSerLCDpa& s, char c ) {"
   				accessor << "\treturn s.println( c );"
@@ -757,20 +822,29 @@ class ArduinoSketch
   				accessor << "void print( SWSerLCDsf& s, char* str ) {"
   				accessor << "\treturn s.print( str );"
   				accessor << "}"
-  				accessor << "void clearscr(SWSerLCDsf& s) {"
+   				accessor << "void clearscr(SWSerLCDsf& s) {"
  	 			  accessor << "\treturn s.clearscr();"
-  				accessor << "}"
-  				accessor << "void home(SWSerLCDsf& s) {"
-  				accessor << "\treturn s.home();"
-  				accessor << "}"
-  				accessor << "void setgeo( SWSerLCDsf& s, int i ) {"
-  				accessor << "\treturn s.setgeo( i );"
- 	 			  accessor << "}"
-  				accessor << "void setintensity( SWSerLCDsf& s, int i ) {"
-  				accessor << "\treturn s.setintensity( i );"
   				accessor << "}"
   				accessor << "void setxy( SWSerLCDsf& s, int x, int y) {"
   				accessor << "\treturn s.setxy( x, y );"
+  				accessor << "}"
+  				accessor << "void clearscr(SWSerLCDsf& s, const char *str) {"
+ 	 			  accessor << "\treturn s.clearscr(str);"
+  				accessor << "}"
+  				accessor << "void clearscr(SWSerLCDsf& s, int n) {"
+ 	 			  accessor << "\treturn s.clearscr(n);"
+  				accessor << "}"
+  				accessor << "void setxy( SWSerLCDsf& s, int x, int y, const char *str) {"
+  				accessor << "\treturn s.setxy( x, y, str );"
+  				accessor << "}"
+  				accessor << "void setxy( SWSerLCDsf& s, int x, int y, int n) {"
+  				accessor << "\treturn s.setxy( x, y, n );"
+  				accessor << "}"
+  				accessor << "void setgeo( SWSerLCDsf& s, int g) {"
+  				accessor << "\treturn s.setgeo( g );"
+  				accessor << "}"
+  				accessor << "void setintensity( SWSerLCDsf& s, int i ) {"
+  				accessor << "\treturn s.setintensity( i );"
   				accessor << "}"
   				accessor << "void setcmd( SWSerLCDsf& s, uint8_t a, uint8_t b) {"
   				accessor << "\treturn s.setcmd( a, b );"
@@ -784,6 +858,83 @@ class ArduinoSketch
  		end
  	end 	
 
+
+  def twowire_stepper(pin1, pin2, opts={}) # servo motor routines #
+    raise ArgumentError, "can only define pin1 from Fixnum, got #{pin1.class}" unless pin1.is_a?(Fixnum)
+    raise ArgumentError, "can only define pin2 from Fixnum, got #{pin2.class}" unless pin2.is_a?(Fixnum)
+        
+    st_speed = opts[:speed] ? opts[:speed] : 30
+    st_steps = opts[:steps] ? opts[:steps] : 100
+    
+   		if opts[:as]
+ 			@declarations << "Stepper _#{opts[ :as ]} = Stepper(#{st_steps},#{pin1},#{pin2});"
+ 			accessor = []
+ 			$load_libraries << "Stepper"
+ 			accessor << "Stepper& #{opts[ :as ]}() {"
+ 			accessor << "\treturn _#{opts[ :as ]};"
+ 			accessor << "}"
+      @@stepr_inc ||= FALSE
+ 			if (@@stepr_inc == FALSE)	# on second instance this stuff can't be repeated - BBR
+ 				@@stepr_inc = TRUE
+ 				accessor << "void set_speed( Stepper& s, long sp ) {"
+ 				accessor << "\treturn s.set_speed( sp );"
+ 				accessor << "}"
+ 				accessor << "void set_steps( Stepper& s, int b ) {"
+	 			accessor << "\treturn s.set_steps( b );"
+ 				accessor << "}"
+ 				accessor << "int version( Stepper& s ) {"
+ 				accessor << "\treturn s.version();"
+ 				accessor << "}"
+			end
+ 			
+ 			@accessors << accessor.join( "\n" )
+ 			
+ 			@signatures << "Stepper& #{opts[ :as ]}();"
+
+ 			@other_setup << "\t_#{opts[ :as ]}.set_speed(#{st_speed});" if opts[:speed]
+
+ 		end
+ 	end 
+ 	
+
+  def fourwire_stepper( pin1, pin2, pin3, pin4, opts={}) # servo motor routines #
+    raise ArgumentError, "can only define pin1 from Fixnum, got #{pin1.class}" unless pin1.is_a?(Fixnum)
+    raise ArgumentError, "can only define pin2 from Fixnum, got #{pin2.class}" unless pin2.is_a?(Fixnum)
+    raise ArgumentError, "can only define pin3 from Fixnum, got #{pin3.class}" unless pin3.is_a?(Fixnum)
+    raise ArgumentError, "can only define pin4 from Fixnum, got #{pin4.class}" unless pin4.is_a?(Fixnum)
+        
+    st_speed = opts[:speed] ? opts[:speed] : 30
+    st_steps = opts[:steps] ? opts[:steps] : 100
+    
+   		if opts[:as]
+ 			@declarations << "Stepper _#{opts[ :as ]} = Stepper(#{st_steps},#{pin1},#{pin2},#{pin3},#{pin4});"
+ 			accessor = []
+ 			$load_libraries << "Stepper"
+ 			accessor << "Stepper& #{opts[ :as ]}() {"
+ 			accessor << "\treturn _#{opts[ :as ]};"
+ 			accessor << "}"
+      @@stepr_inc ||= FALSE
+ 			if (@@stepr_inc == FALSE)	# on second instance this stuff can't be repeated - BBR
+ 				@@stepr_inc = TRUE
+ 				accessor << "void set_speed( Stepper& s, long sp ) {"
+ 				accessor << "\treturn s.set_speed( sp );"
+ 				accessor << "}"
+ 				accessor << "void set_steps( Stepper& s, int b ) {"
+	 			accessor << "\treturn s.set_steps( b );"
+ 				accessor << "}"
+ 				accessor << "int version( Stepper& s ) {"
+ 				accessor << "\treturn s.version();"
+ 				accessor << "}"
+			end
+ 			
+ 			@accessors << accessor.join( "\n" )
+ 			
+ 			@signatures << "Stepper& #{opts[ :as ]}();"
+
+ 			@other_setup << "\t_#{opts[ :as ]}.set_speed(#{st_speed});" if opts[:speed]
+
+ 		end
+ 	end 
 
 
   def servo(pin, opts={}) # servo motor routines #
@@ -1090,6 +1241,16 @@ class ArduinoSketch
     external_vars << "struct debounce dbce[#{array_size}] = { #{@debounce_settings.join(", ")} };" if $plugin_structs[:debounce]
     external_vars << ""
     
+    external_vars << "// hysteresis array"
+    h_array_size = @hysteresis_settings.empty? ? 1 : @hysteresis_pins.length + 1 # conserve space if no variables needed
+    external_vars << "struct hysteresis hyst[#{h_array_size}] = { #{@hysteresis_settings.join(", ")} };" if $plugin_structs[:sensor]
+    external_vars << ""
+    
+    external_vars << "// spectrasymbol soft pot array"
+    sp_array_size = @spectra_settings.empty? ? 1 : @spectra_pins.length + 1 # conserve space if no variables needed
+    external_vars << "struct spectra spec[#{sp_array_size}] = { #{@spectra_settings.join(", ")} };" if $plugin_structs[:spectra]
+    external_vars << ""
+    
     $external_array_vars.each { |var| external_vars << var } if $external_array_vars
 
     external_vars << "\n" + comment_box( "variable and accessors" )
@@ -1192,6 +1353,23 @@ class ArduinoSketch
     result.gsub!("ON", "1")
     result.gsub!("OFF", "0")
     result
+  end
+  
+  def self.add_to_setup(meth) 
+    meth = meth.gsub("setup", "additional_setup")
+    post_process_ruby_to_c_methods(meth)
+  end
+  
+  def self.post_process_ruby_to_c_methods(e)      
+    clean_c_methods = []
+      # need to take a look at the \(unsigned in the line below not sure if we are really trying to catch something like that
+      if e !~ /^\s*(#{C_VAR_TYPES})(\W{1,6}|\(unsigned\()(#{$external_var_identifiers.join("|")})/ || $external_var_identifiers.empty?
+        # use the list of identifers the external_vars method of the sketch and remove the parens the ruby2c sometime adds to variables
+        # keep an eye on the gsub!.. are we getting nil errors
+        e.gsub!(/((#{$external_var_identifiers.join("|")})\(\))/, '\2')  unless $external_var_identifiers.empty? 
+        clean_c_methods << e
+      end
+      return clean_c_methods.join( "\n" )
   end
   
   private
