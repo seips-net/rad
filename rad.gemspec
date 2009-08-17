@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
   s.version = "0.3.1"
   s.date = %q{2008-08-18}
   s.default_executable = %q{rad}
-  s.summary = "RAD: Ruby Arduino Development - 0.3.1"
+  s.summary = "RAD: Ruby Arduino Development - 0.3.1 - 0.1"
   s.email = "jd@jdbarnhart.com"
   s.executables = ["rad"]
   s.homepage = "http://github.com/atduskreg/rad"  
@@ -25,11 +25,11 @@ Gem::Specification.new do |s|
     s.specification_version = 2
 
     if current_version >= 3 then
-      s.add_runtime_dependency(%q<RubyToC>, [">= 1.0.0"])
+      s.add_runtime_dependency(%q<Ruby2c>, [">= 1.0.0.5"])
     else
-      s.add_dependency(%q<RubyToC>, [">= 1.0.0"])
+      s.add_dependency(%q<Ruby2c>, [">= 1.0.0.5"])
     end
   else
-    s.add_dependency(%q<RubyToC>, [">= 1.0.0"])
+    s.add_dependency(%q<Ruby2c>, [">= 1.0.0.5"])
   end
 end

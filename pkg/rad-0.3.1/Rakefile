@@ -10,7 +10,7 @@ require 'fileutils'
 require 'hoe'
 
 $: << "../lib/" # HACK while I work out r2c/rad incompatibilities
-gem "RubyToC"   # HACK to deal with rubygems beta version activation bug
+# gem "RubyToC"   # HACK to deal with rubygems beta version activation bug
 
 RAD_ROOT = File.expand_path(File.dirname(__FILE__))
 
@@ -85,7 +85,7 @@ hoe = Hoe.new(GEM_NAME, VERS) do |p|
   
   # == Optional
   p.changes = p.paragraphs_of("History.txt", 0..1).join("\n\n")
-  p.extra_deps =  [ ['RubyToC', '>= 1.0.0'] ]
+  p.extra_deps =  [ ['ruby2c', '>= 1.0.0.6'] ]
   #p.spec_extras = {}    # A hash of extra values to set in the gemspec.
 end
 
