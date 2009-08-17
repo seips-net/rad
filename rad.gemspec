@@ -20,16 +20,16 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.rdoc"]
   s.add_dependency("mime-types", ["> 0.0.0"])
   
-  if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
-    s.specification_version = 2
-
-    if current_version >= 3 then
-      s.add_runtime_dependency(%q<Ruby2c>, [">= 1.0.0.6"])
-    else
-      s.add_dependency(%q<Ruby2c>, [">= 1.0.0.6"])
-    end
-  else
-    s.add_dependency(%q<Ruby2c>, [">= 1.0.0.6"])
-  end
+  # if s.respond_to? :specification_version then
+  #   current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
+  #   s.specification_version = 2
+  # 
+  #   if current_version >= 3 then
+  #     s.add_runtime_dependency(%q<Ruby2c>, [">= 1.0.0.6"])
+  #   else
+  #     s.add_dependency(%q<Ruby2c>, [">= 1.0.0.6"])
+  #   end
+  # else
+  #   s.add_dependency(%q<Ruby2c>, [">= 1.0.0.6"])
+  # end
 end
