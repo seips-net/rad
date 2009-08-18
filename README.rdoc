@@ -12,8 +12,7 @@ See also the Arduino Software reference: http://www.arduino.cc/en/Reference/Home
 
 ==Examples
 
-See the examples directory for lots of examples of RAD in action: 
-http://github.com/atduskgreg/rad/tree/master/lib/examples
+See the examples directory for lots of examples of RAD in action
 
 The atduskgreg/rad wiki also contains a growing library of examples and hardware tutorials:
 http://github.com/atduskgreg/rad/wikis
@@ -46,7 +45,7 @@ Write a sketch that will blink a single LED every 500ms:
   	end
   end
 
-Attach your Arduino and use rake to complile and upload your sketch:
+Attach your Arduino and use rake to compile and upload your sketch:
 
  $ rake make:upload
 
@@ -57,6 +56,8 @@ Installing RAD and the Arduino software on Linux can be a little more difficult 
     $ rad install arduino
 
 And RAD will do its best to get the Arduino software installed on your system.
+
+   For OS X, Arduino should be installed in your applications directory -- install the intel or power pc drivers in /drivers
 
 ==Get Involved
 

@@ -7,6 +7,8 @@ class Makefile
     # build the sketch Makefile for the given template based on the values in its software and hardware config files
     def compose_for_sketch(build_dir)
       params = hardware_params.merge software_params
+      board_config = board_configuration(@software_params['arduino_root'], @hardware_params['mcu'])
+      params.merge board_config
       params['target'] = build_dir.split("/").last
            
       params['libraries_root'] = "#{File.expand_path(RAD_ROOT)}/vendor/libraries"
@@ -32,6 +34,20 @@ class Makefile
     def software_params
       return @software_params if @software_params
       return @software_params = YAML.load_file( "#{RAD_ROOT}/config/software.yml" )
+    end
+    
+    ## match the mcu with the proper board configuration from the arduino board.txt file
+    def board_configuration(arduino_root, board_name)
+      board_configuration = {}
+      File.open("#{arduino_root}/hardware/boards.txt", "r") do |infile|
+      	while (line = infile.gets)
+      		if line[0, board_name.length] == board_name
+            key_value = line[board_name.length + 1, line.length - board_name.length].split("=")
+      		  board_configuration[key_value[0]] = key_value[1].split("\n")[0]
+      	  end
+      	end
+      end
+      board_configuration
     end
       
   end
