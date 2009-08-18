@@ -72,9 +72,9 @@ $(ARDUINO)/wiring_shift.c $(ARDUINO)/WInterrupts.c <%= params['twi_c'] %>
 CXXSRC = $(ARDUINO)/HardwareSerial.cpp $(SOFTWARE_SERIAL)/SoftwareSerial.cpp $(ARDUINO)/Print.cpp<%= params['libraries'].collect{|l| " $(LIBRARY_ROOT)/#{ l }/#{l }.cpp"}.join('') %>
 MCU = <%= params['mcu'] %>
 <% if params['asm_files'] %>ASRC = <%= params['asm_files'].join(' ') %><% end %>
-F_CPU = 16000000
+F_CPU = <%= params['build.f_cpu'][-1,1] %>
 FORMAT = ihex
-UPLOAD_RATE = 19200
+UPLOAD_RATE = <%= params['upload.speed']%>
 BIN_DIR = <%= params['arduino_root'] %>/hardware/tools/avr/bin
 
 # Name of this Makefile (used for "make depend").
@@ -113,7 +113,7 @@ LDFLAGS = -lm
 
 
 # Programming support using avrdude. Settings and variables.
-AVRDUDE_PROGRAMMER = stk500
+AVRDUDE_PROGRAMMER = <%= params['upload.protocol'] %>
 AVRDUDE_PORT = $(PORT)
 AVRDUDE_WRITE_FLASH = -U flash:w:$(TARGET).hex
 AVRDUDE_FLAGS = -F -p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER) \

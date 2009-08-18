@@ -8,7 +8,7 @@ class Makefile
     def compose_for_sketch(build_dir)
       params = hardware_params.merge software_params
       board_config = board_configuration(@software_params['arduino_root'], @hardware_params['mcu'])
-      params.merge board_config
+      params = params.merge board_config
       params['target'] = build_dir.split("/").last
            
       params['libraries_root'] = "#{File.expand_path(RAD_ROOT)}/vendor/libraries"
