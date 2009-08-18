@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
   s.version = "0.3.4"
   s.date = %q{2008-08-18}
   s.default_executable = %q{rad}
-  s.summary = "RAD: Ruby Arduino Development - 0.3.4"
+  s.summary = "RAD: Ruby Arduino Development - 0.3.5"
   s.email = "jd@jdbarnhart.com"
   s.executables = ["rad"]
   s.homepage = "http://github.com/atduskreg/rad"  
@@ -26,13 +26,13 @@ Gem::Specification.new do |s|
   
     if current_version >= 3 then
       s.add_runtime_dependency(%q<ruby2c>, [">= 1.0.0.6"])
-      s.add_runtime_dependency(%q<ParseTree>, [">= 3.0.4"])
+      s.add_runtime_dependency(%q<sexp_processor>, ["~> 3.0", ">=3.0.2"])
     else
       s.add_dependency(%q<ruby2c>, [">= 1.0.0.6"])
-      s.add_dependency(%q<ParseTree>, [">= 3.0.4"])
+      s.add_runtime_dependency(%q<sexp_processor>, ["~> 3.0", ">=3.0.2"])
     end
   else
     s.add_dependency(%q<ruby2c>, [">= 1.0.0.6"])
-    s.add_dependency(%q<ParseTree>, [">= 3.0.4"])
+    s.add_runtime_dependency(%q<sexp_processor>, ["~> 3.0", ">=3.0.2"])
   end
 end
