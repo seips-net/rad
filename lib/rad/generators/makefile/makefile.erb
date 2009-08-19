@@ -75,7 +75,7 @@ $(ARDUINO)/wiring_shift.c $(ARDUINO)/WInterrupts.c <%= params['twi_c'] %>
 CXXSRC = $(ARDUINO)/HardwareSerial.cpp $(SOFTWARE_SERIAL)/SoftwareSerial.cpp $(ARDUINO)/Print.cpp<%= params['libraries'].collect{|l| " $(LIBRARY_ROOT)/#{ l }/#{l }.cpp"}.join('') %>
 MCU = <%= params['build.mcu'] %>
 <% if params['asm_files'] %>ASRC = <%= params['asm_files'].join(' ') %><% end %>
-F_CPU = <%= params['build.f_cpu'][-1,1] %>
+F_CPU = <%= params['build.f_cpu'].chomp("L") %>
 FORMAT = ihex
 UPLOAD_RATE = <%= params['upload.speed']%>
 BIN_DIR = <%= params['arduino_root'] %>/hardware/tools/avr/bin

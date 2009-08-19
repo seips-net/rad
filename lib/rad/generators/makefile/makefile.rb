@@ -40,11 +40,9 @@ class Makefile
     def board_configuration(arduino_root, board_name)
       board_configuration = {}
       File.open("#{arduino_root}/hardware/boards.txt", "r") do |infile|
-      	while (line = infile.gets)
-      		if line[0, board_name.length] == board_name
-            key_value = line[board_name.length + 1, line.length - board_name.length].split("=")
-      		  board_configuration[key_value[0]] = key_value[1].split("\n")[0]
-      	  end
+      	infile.each_line do |line|
+      	  next unless line.chomp =~ /^#{board_name}\.([^=]*)=(.*)$/
+      	  board_configuration[$1] = $2
       	end
       end
       board_configuration
