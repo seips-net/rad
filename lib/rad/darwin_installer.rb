@@ -1,9 +1,9 @@
 class DarwinInstaller
   def self.install!
-    puts "Downloading arduino-0012 for Mac from Arduino.cc"
-    File.open("/Applications/arduino-0012.zip", "w") do |file|
+    puts "Downloading arduino-0015 for Mac from Arduino.cc"
+    File.open("/Applications/arduino-0015.zip", "w") do |file|
       pbar = nil
-      file << open("http://www.arduino.cc/files/arduino-0012-mac.zip",
+      file << open("http://arduino.googlecode.com/files/arduino-0015-mac.zip",
       :content_length_proc => lambda {|t|
         if t && 0 < t
           pbar = ProgressBar.new(" Progress", t)
@@ -16,8 +16,8 @@ class DarwinInstaller
       pbar.finish
     end
     puts "Unzipping..."
-    `cd /Applications; unzip arduino-0012.zip`
-    `rm /Applications/arduino-0012.zip`
-    puts "installed Arduino here: /Applications/arduino-0012"
+    `cd /Applications; unzip arduino-0015.zip`
+    `rm /Applications/arduino-0015.zip`
+    puts "installed Arduino here: /Applications/arduino-0015"
   end
 end

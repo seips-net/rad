@@ -91,34 +91,34 @@ class LinuxInstaller
   end
   
   def self.check_or_install_arduino 
-  	if File.exist?("/usr/local/arduino-0012")
-  		puts "arduino software previously installed at /usr/local/arduino-0012 !"
+  	if File.exist?("/usr/local/arduino-0015")
+  		puts "arduino software previously installed at /usr/local/arduino-0015 !"
   	else
   		puts "installing arduino software..."
-  		%x{cd /usr/local/; wget http://arduino.cc/files/arduino-0012-linux.tgz}
-  		%x{tar -C /usr/local -xzf /usr/local/arduino-0012-linux.tgz}
+  		%x{cd /usr/local/; wget http://arduino.googlecode.com/files/arduino-0015-linux.tgz}
+  		%x{tar -C /usr/local -xzf /usr/local/arduino-0015-linux.tgz}
   
-  		%x{ln -s /usr/local/arduino-0012/arduino ~/Desktop/arduino}
+  		%x{ln -s /usr/local/arduino-0015/arduino ~/Desktop/arduino}
   
   		# gotta patch it so it can run from command line or anywhere
-  		arduino_file = File.open("/usr/local/arduino-0012/arduino") {|f| f.read}
+  		arduino_file = File.open("/usr/local/arduino-0015/arduino") {|f| f.read}
   		new_doc = arduino_file.split("\n")
-  		new_doc[1] = "cd /usr/local/arduino-0012"
-  		File.open("/usr/local/arduino-0012/arduino", "w") {|f| f.puts new_doc }
+  		new_doc[1] = "cd /usr/local/arduino-0015"
+  		File.open("/usr/local/arduino-0015/arduino", "w") {|f| f.puts new_doc }
   
-  		%x{mkdir -p /usr/local/arduino-0012/hardware/tools/avr/bin}
+  		%x{mkdir -p /usr/local/arduino-0015/hardware/tools/avr/bin}
   		# there is a difference from what the makefile expects to where it is
-  		%x{ln -s /usr/bin/avr-gcc /usr/local/arduino-0012/hardware/tools/avr/bin/avr-gcc}		
-  		%x{ln -s /usr/bin/avr-g++ /usr/local/arduino-0012/hardware/tools/avr/bin/avr-g++}
-  		%x{ln -s /usr/bin/avr-ar /usr/local/arduino-0012/hardware/tools/avr/bin/avr-ar}
-  		%x{ln -s /usr/bin/avr-objcopy /usr/local/arduino-0012/hardware/tools/avr/bin/avr-objcopy}
-  		%x{ln -s /usr/local/arduino-0012/hardware/tools/avrdude /usr/local/arduino-0012/hardware/tools/avr/bin/avrdude}
-  		%x{ln -s /usr/local/arduino-0012/hardware/tools/avrdude.conf /usr/local/arduino-0012/hardware/tools/avr/etc/avrdude.conf}
+  		%x{ln -s /usr/bin/avr-gcc /usr/local/arduino-0015/hardware/tools/avr/bin/avr-gcc}		
+  		%x{ln -s /usr/bin/avr-g++ /usr/local/arduino-0015/hardware/tools/avr/bin/avr-g++}
+  		%x{ln -s /usr/bin/avr-ar /usr/local/arduino-0015/hardware/tools/avr/bin/avr-ar}
+  		%x{ln -s /usr/bin/avr-objcopy /usr/local/arduino-0015/hardware/tools/avr/bin/avr-objcopy}
+  		%x{ln -s /usr/local/arduino-0015/hardware/tools/avrdude /usr/local/arduino-0015/hardware/tools/avr/bin/avrdude}
+  		%x{ln -s /usr/local/arduino-0015/hardware/tools/avrdude.conf /usr/local/arduino-0015/hardware/tools/avr/etc/avrdude.conf}
   
   
   		puts
   		puts "************************************************************************"
-  		puts "**  please add /usr/local/arduino-0012 to your path!                  **"
+  		puts "**  please add /usr/local/arduino-0015 to your path!                  **"
   		puts "**  you will also need to run sudo update-alternatives --config java  **"
   		puts "**  to choose java-1.50-sun as the default java                       **"
   		puts "************************************************************************"

@@ -28,7 +28,7 @@ class OptionParser #:nodoc:
                 "physical_reset"   => false
                 },
                 "software" => {
-                  "arduino_root"   => "/Applications/arduino-0012"
+                  "arduino_root"   => "/Applications/arduino-0015"
                  }
                }
     
@@ -261,9 +261,13 @@ else
     # example sketches can be uploaded to your arduino with
     # rake make:upload sketch=examples/hello_world
     # just replace hello_world with other examples
+    # 
+    # hello world (replace with your code):
     
+      output_pin 13, :as => :led
+
       def loop
-       # your code here
+        blink led, 100
       end
       
   end
@@ -282,6 +286,20 @@ else
   puts "Added #{sketch_name}/config"
   
   File.open("#{sketch_name}/config/hardware.yml", 'w') do |file|
+    file << "##############################################################
+# Today's MCU Choices (replace the mcu with your arduino board)
+# atmega8 => Arduino NG or older w/ ATmega8
+# atmega168 => Arduino NG or older w/ ATmega168
+# mini => Arduino Mini
+# bt  => Arduino BT
+# diecimila  => Arduino Diecimila or Duemilanove w/ ATmega168
+# nano  => Arduino Nano
+# lilypad  => LilyPad Arduino
+# pro => Arduino Pro or Pro Mini (8 MHz)
+# atmega328 => Arduino Duemilanove w/ ATmega328
+# mega => Arduino Mega
+
+"
     file << options["hardware"].to_yaml
   end
   puts "Added #{sketch_name}/config/hardware.yml"
@@ -296,7 +314,14 @@ else
   
   puts "***************************************************"
   puts "***     Please note: This version supports      ***"
-  puts "***            Arduino 12 only!                 ***"
+  puts "***            Arduino 15 only!                 ***"
+  puts "***                                             ***"
+  puts "***      default configuration: diecimila       ***"
+  puts "***       to change goto config/hardware        ***"
+  puts "***                                             ***"
+  puts "***                using usb?                   ***"
+  puts "***    don't forget to install the drivers      ***"
+  puts "***                                             ***"
   puts "***   run rad install arduino to upgrade        ***"
   puts "***************************************************"
 end

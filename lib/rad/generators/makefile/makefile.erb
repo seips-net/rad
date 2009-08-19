@@ -59,6 +59,9 @@
 #     upload your program to the Arduino board.
 #
 # $Id$
+#
+#
+# 
 
 PORT = <%= params['serial_port'] %>
 TARGET = <%= params['target'] %>
@@ -70,7 +73,7 @@ $(ARDUINO)/wiring_analog.c $(ARDUINO)/wiring_digital.c \
 $(ARDUINO)/wiring_pulse.c $(ARDUINO)/wiring_serial.c \
 $(ARDUINO)/wiring_shift.c $(ARDUINO)/WInterrupts.c <%= params['twi_c'] %>
 CXXSRC = $(ARDUINO)/HardwareSerial.cpp $(SOFTWARE_SERIAL)/SoftwareSerial.cpp $(ARDUINO)/Print.cpp<%= params['libraries'].collect{|l| " $(LIBRARY_ROOT)/#{ l }/#{l }.cpp"}.join('') %>
-MCU = <%= params['mcu'] %>
+MCU = <%= params['build.mcu'] %>
 <% if params['asm_files'] %>ASRC = <%= params['asm_files'].join(' ') %><% end %>
 F_CPU = <%= params['build.f_cpu'][-1,1] %>
 FORMAT = ihex
