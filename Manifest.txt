@@ -80,6 +80,7 @@ lib/libraries/Wire/keywords.txt
 lib/libraries/Wire/twi.h
 lib/libraries/Wire/utility/twi.c
 lib/libraries/Wire/utility/twi.h
+lib/plugins/basics.rb
 lib/plugins/bitwise_ops.rb
 lib/plugins/blink.rb
 lib/plugins/blink_m.rb

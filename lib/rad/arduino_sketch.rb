@@ -320,7 +320,7 @@ class ArduinoSketch
         @debounce_pins << num
         state = opts[:latch] == :on ? 1 : 0
         prev = opts[:latch] == :on ? 0 : 1
-        adjust = opts[:adjust] ? opts[:adjust] : 200
+        adjust = opts[:adjust] ? opts[:adjust] : 20
         @debounce_settings <<  "dbce[#{num}].state = #{state}, dbce[#{num}].read = 0, dbce[#{num}].prev = #{prev}, dbce[#{num}].time = 0, dbce[#{num}].adjust = #{adjust}"
       end
       

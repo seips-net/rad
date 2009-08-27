@@ -107,6 +107,24 @@ int read_input(int input)
 }
 
 
+int press(int input)
+{
+  int state = LOW;
+  dbce[input].read = digitalRead(input);
+
+  if (dbce[input].read == HIGH && dbce[input].prev == LOW && millis() - dbce[input].time > dbce[input].adjust)
+     {
+      dbce[input].time = millis();
+      state = HIGH;
+    }
+  else 
+    state = LOW;
+    
+      dbce[input].prev = dbce[input].read;
+      return state;
+}
+
+
 int toggle(int input, int output)
 {
   return read_and_toggle(input, output);
