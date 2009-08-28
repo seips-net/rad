@@ -1,5 +1,7 @@
 class I2cWithClockChip < ArduinoSketch
   
+  # until is an unsupported node type
+  
   # IMPORTANT -- This is one for four examples that fails with Ruby 1.9 support (latest ruby2c and parsetree)
   # the failing example is commented out and replaced with this hello world until I have a chance to resolve the issue -- jd
   output_pin 13, :as => :led
