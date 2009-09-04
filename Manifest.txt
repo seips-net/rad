@@ -24,6 +24,7 @@ lib/examples/hello_eeprom.rb
 lib/examples/hello_eeprom_lcdpa.rb
 lib/examples/hello_format_print.rb
 lib/examples/hello_lcd_charset.rb
+lib/examples/hello_maxbotix.rb
 lib/examples/hello_pa_lcd.rb
 lib/examples/hello_servos.rb
 lib/examples/hello_spectra_sound.rb

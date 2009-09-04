@@ -19,32 +19,12 @@ class ParallaxPing < ArduinoPlugin
   
   # Methods for the Parallax Ping)) UltraSonic Distance Sensor.
   # 
-  # Example:
-  #
-  # class RangeFinder < ArduinoSketch
-  #   serial_begin
-  #   
-  #   external_vars :sig_pin => 'int, 7'
-  #   
-  #   def loop
-  #     serial_println(ping(sig_pin)) 
-  #     delay(200) 
-  #   end
-  # end
+  # refer to the hello_maxbotix example in /examples/hello_maxbotix.rb
 
   # Triggers a pulse and returns the delay in microseconds for the echo.
+  
   int ping(int pin) {
-    pinMode(pin, OUTPUT);
-
-    digitalWrite(pin, LOW);
-    delayMicroseconds(2);
-    digitalWrite(pin, HIGH);
-    delayMicroseconds(5);
-    digitalWrite(pin, LOW);
-
-    pinMode(pin, INPUT);
-
-    return pulseIn(pin, HIGH);
+    return analogRead(pin);
   }
 
 end

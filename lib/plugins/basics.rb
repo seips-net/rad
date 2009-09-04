@@ -25,30 +25,40 @@ class Basics < ArduinoPlugin
   
   # call pulse(us) to pulse a servo 
 
-#####################
+  #####################
 
-## basics.rb contains a set of simple methods such as on an off, enabling things like
-# button.on or button.off
+  ## basics.rb contains a set of simple methods such as on an off, enabling things like
+  # button.on or button.off
 
-## abstract summary:
+  ## abstract summary:
 
-  # 
+  ## regarding analog_on:
+  ## On newer Arduino boards (including the Mini and BT) with the ATmega168 chip, this function works on pins 3, 5, 6, 9, 10, and 11. Older USB and serial Arduino boards with an ATmega8 only support analogWrite() on pins 9, 10, and 11.
 
-######################
+    # 
 
-
-
-void on(int pin)
-{
-  digitalWrite( pin, HIGH );
-}
-
-void off(int pin)
-{
-	digitalWrite( pin, LOW );
-}
+  ######################
 
 
 
-    
+  void on(int pin)
+  {
+    digitalWrite( pin, HIGH );
+  }
+
+
+  void analog_on(int pin, int val)
+  {
+    analogWrite( pin, val );
+  }
+
+
+  void off(int pin)
+  {
+  	digitalWrite( pin, LOW );
+  }
+
+
+
+
 end
