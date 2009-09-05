@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
   s.version = "0.4.0"
   s.date = %q{2008-09-04}
   s.default_executable = %q{rad}
-  s.summary = "RAD: Ruby Arduino Development - 0.4.0 -- 1.9 Ready"
+  s.summary = "RAD: Ruby Arduino Development - 0.4.0 -- 1.9 Ready!"
   s.email = "jd@jdbarnhart.com"
   s.executables = ["rad"]
   s.homepage = "http://github.com/atduskreg/rad"  
