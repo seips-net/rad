@@ -22,14 +22,12 @@ http://github.com/atduskgreg/rad/wikis
 To install the edge gem:
 
  # Update to RubyGems 1.2.0 before proceeding!
- $ gem sources -a http://gems.github.com (you only have to do this once)
+ $ gem sources -a http://gemcutter.org (you only have to do this once)
  $ sudo gem install madrona-rad
 
 A very old and feature poor (though slightly more 'stable' RAD) is available from RubyGems:
 
  $ sudo gem install rad
-
-We plan to push tagged releases to RubyGems at key points. The 0.3 release should be coming up soon.
 
 Run the rad command to create a new project:
 
@@ -61,4 +59,4 @@ And RAD will do its best to get the Arduino software installed on your system.
 
 ==Get Involved
 
-Cheers? Jeers? Wanna help out? Contact Greg Borenstein: greg [dot] borenstein [at] gmail [dot] com
+Cheers? Jeers? Wanna help out? Contact JD Barnhart: jd [at] jdbarnhart [dot] com
