@@ -5,15 +5,15 @@
 
 Gem::Specification.new do |s|
   s.name = %q{madrona-rad}
-  s.version = "0.4.1"
+  s.version = "0.4.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["JD Barnhart", "Greg Borenstein"]
   s.date = %q{2009-10-28}
-  s.default_executable = %q{rad}
+  s.default_executable = %q{madrona-rad}
   s.description = %q{Ruby Arduino Development: a framework for programming the Arduino physcial computing platform using Ruby}
   s.email = %q{jd@jdbarnhart.com}
-  s.executables = ["rad"]
+  s.executables = ["madrona-rad"]
   s.extra_rdoc_files = [
     "README.rdoc"
   ]
@@ -25,7 +25,6 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION",
-     "bin/rad",
      "lib/examples/add_hysteresis.rb",
      "lib/examples/basic_blink.rb",
      "lib/examples/blink_m_address_assignment.rb",
@@ -143,8 +142,8 @@ Gem::Specification.new do |s|
      "lib/rad/todo.txt",
      "lib/rad/variable_processing.rb",
      "lib/rad/version.rb",
+     "madrona-rad.gemspec",
      "project_dev.rake",
-     "rad.gemspec",
      "setup.rb",
      "spec/examples/hello_world.rb",
      "spec/examples/serial_motor.rb",
