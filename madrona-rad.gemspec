@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{madrona-rad}
-  s.version = "0.4.2"
+  s.version = "0.4.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["JD Barnhart", "Greg Borenstein"]
@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION",
+     "bin/rad",
      "lib/examples/add_hysteresis.rb",
      "lib/examples/basic_blink.rb",
      "lib/examples/blink_m_address_assignment.rb",
