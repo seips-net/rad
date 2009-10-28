@@ -48,14 +48,6 @@ static void BlinkM_beginWithPowerPins(byte pwrpin, byte gndpin)
     Wire.begin();
 }
 
-// Call this first when BlinkM is plugged directly into Arduino
-// The BlinkMs PWR (power) pins should line up with pins 2 and 3 of the connector, 
-// while the I2C (communications) pins should line up with pins 4 and 5.
-
-static void BlinkM_beginWithPower()
-{
-    BlinkM_beginWithPowerPins( PC3, PC2 );
-}
 
 // sends a generic command
 
