@@ -1,0 +1,20 @@
+= TODOs
+* replace rad/progressbar.rb by gem
+* write rad/windows_installer.rb
+* rewrite rad/*_installer.rb
+* update installer to uptodate arduino
+* remove/integrade rad/todo.txt
+* remove/integrade rad/antiquated_todo.txt
+* remove/integrade rad/README.rdoc
+* use Bundler für required gems
+* check rad/rad_processor.rb to eliminate "HACK"s
+* auto require/load/include files in rad/init.rb and others
+* refactor rad/rad_rewriter.rb
+* validation rad/rad_type_checker.rb
+* check todos in rad/sketch_compiler.rb
+* cleanup/testing rad/variable_processing.rb
+* comment code
+* implement better testing
+* check plugins/*.rb for updates
+* check examples/*.rb for updates
+* remove outdated code (< ruby 1.8.6) i.e. in setup.rb
