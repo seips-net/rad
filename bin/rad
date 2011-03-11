@@ -11,9 +11,9 @@ require 'fileutils'
 require 'yaml'
 require 'open-uri'
 require 'readline'
+require 'progressbar'
 
 require File.expand_path(File.dirname(__FILE__)) + "/../lib/rad/version.rb"
-require File.expand_path(File.dirname(__FILE__)) + "/../lib/rad/progressbar.rb"
 require File.expand_path(File.dirname(__FILE__)) + "/../lib/rad/linux_installer.rb"
 require File.expand_path(File.dirname(__FILE__)) + "/../lib/rad/darwin_installer.rb"
 

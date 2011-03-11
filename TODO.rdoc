@@ -1,5 +1,4 @@
 = TODOs
-* replace rad/progressbar.rb by gem
 * write rad/windows_installer.rb
 * rewrite rad/*_installer.rb
 * update installer to uptodate arduino
