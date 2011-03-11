@@ -6,7 +6,6 @@
 * remove/integrade rad/todo.txt
 * remove/integrade rad/antiquated_todo.txt
 * remove/integrade rad/README.rdoc
-* use Bundler für required gems
 * check rad/rad_processor.rb to eliminate "HACK"s
 * auto require/load/include files in rad/init.rb and others
 * refactor rad/rad_rewriter.rb
@@ -18,3 +17,4 @@
 * check plugins/*.rb for updates
 * check examples/*.rb for updates
 * remove outdated code (< ruby 1.8.6) i.e. in setup.rb
+* cleanup bin/rad
