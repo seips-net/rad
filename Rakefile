@@ -1,6 +1,9 @@
 require 'rubygems'
 require 'rake'
 
+require 'yaml'
+YAML::ENGINE.yamler='psych' if defined?(YAML::ENGINE)
+
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
