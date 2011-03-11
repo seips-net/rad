@@ -1,3 +1,17 @@
+module Rad::Installer::Mac
+  def self.run
+    text = <<-MACOS
+To install Arduino on MacOS follow the instructions on the Website.
+http://arduino.cc/en/Guide/MacOSX
+MACOS
+    puts text
+  end
+
+  def self.install
+    #TODO
+  end
+end
+
 class DarwinInstaller
   def self.install!
     puts "Downloading arduino-0015 for Mac from Arduino.cc"

@@ -1,4 +1,18 @@
-class LinuxInstaller
+module Rad::Installer::Linux
+  def self.run
+    text = <<-LINUX
+To install Arduino on Linux follow the instructions on the Website.
+http://www.arduino.cc/playground/Learning/Linux
+LINUX
+    puts text
+  end
+
+  def self.install
+    #TODO
+  end
+end
+
+class LinuxInstallerOld
   
   # this is the thing we actually run to make something happen
   def self.install!

@@ -12,10 +12,12 @@ require 'yaml'
 require 'open-uri'
 require 'readline'
 require 'progressbar'
+require 'pathname'
 
-require File.expand_path(File.dirname(__FILE__)) + "/../lib/rad/version.rb"
-require File.expand_path(File.dirname(__FILE__)) + "/../lib/rad/linux_installer.rb"
-require File.expand_path(File.dirname(__FILE__)) + "/../lib/rad/darwin_installer.rb"
+RAD_LIB = Pathname.new(__FILE__).expand_path.dirname.join('..','lib')
+
+require RAD_LIB.join('rad','version')
+require RAD_LIB.join('rad','installer')
 
 class OptionParser #:nodoc:
     
@@ -96,15 +98,8 @@ end
 
 
 if ARGV[0] == "install"
-  
-  case RUBY_PLATFORM
-  when /linux/
-    LinuxInstaller.install!
-  when /darwin/
-    DarwinInstaller.install!
-  else
-    raise "Sorry. Can only install Arduino on Mac OS X. See here for Linux instructions: http://www.arduino.cc/playground/Learning/Linux"
-  end
+
+  Rad::Installer.run
 
 elsif ARGV[0] == "test"
   test_dir = File.expand_path(File.dirname(__FILE__)) + "/../test/hello_world_test"
