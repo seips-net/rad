@@ -1,5 +1,5 @@
 module Rad
 end
 
-require 'rad/version'
-require 'rad/init'
+require RAD_LIB.join('rad','version')
+require RAD_LIB.join('rad','installer')
