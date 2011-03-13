@@ -20,53 +20,13 @@ module Rad::Build
     FileUtils.mkdir_p "#{sketch_name}/vendor/libraries"
     puts "Successfully created your libraries directory."
 
-    FileUtils.cp_r "#{File.dirname(__FILE__)}/../lib/libraries/AF_XPort/.", "#{sketch_name}/vendor/libraries/AF_XPort"
-    puts "Installed AF_XPort into #{sketch_name}/vendor/libraries"
-    puts
-
-    FileUtils.cp_r "#{File.dirname(__FILE__)}/../lib/libraries/AFSoftSerial/.", "#{sketch_name}/vendor/libraries/AFSoftSerial"
-    puts "Installed AFSoftSerial into #{sketch_name}/vendor/libraries"
-    puts
-
-    FileUtils.cp_r "#{File.dirname(__FILE__)}/../lib/libraries/DS1307/.", "#{sketch_name}/vendor/libraries/DS1307"
-    puts "Installed DS1307 into #{sketch_name}/vendor/libraries"
-    puts
-
-    FileUtils.cp_r "#{File.dirname(__FILE__)}/../lib/libraries/FrequencyTimer2/.", "#{sketch_name}/vendor/libraries/FrequencyTimer2"
-    puts "Installed FrequencyTimer2 into #{sketch_name}/vendor/libraries"
-    puts
-
-    FileUtils.cp_r "#{File.dirname(__FILE__)}/../lib/libraries/I2CEEPROM/.", "#{sketch_name}/vendor/libraries/I2CEEPROM"
-    puts "Installed I2CEEPROM into #{sketch_name}/vendor/libraries"
-    puts
-
-    FileUtils.cp_r "#{File.dirname(__FILE__)}/../lib/libraries/LoopTimer/.", "#{sketch_name}/vendor/libraries/LoopTimer"
-    puts "Installed LoopTimer into #{sketch_name}/vendor/libraries"
-    puts
-
-    FileUtils.cp_r "#{File.dirname(__FILE__)}/../lib/libraries/OneWire/.", "#{sketch_name}/vendor/libraries/OneWire"
-    puts "Installed OneWire into #{sketch_name}/vendor/libraries"
-    puts
-
-    FileUtils.cp_r "#{File.dirname(__FILE__)}/../lib/libraries/Servo/.", "#{sketch_name}/vendor/libraries/Servo"
-    puts "Installed Servo into #{sketch_name}/vendor/libraries"
-    puts
-
-    FileUtils.cp_r "#{File.dirname(__FILE__)}/../lib/libraries/Stepper/.", "#{sketch_name}/vendor/libraries/Stepper"
-    puts "Installed Stepper into #{sketch_name}/vendor/libraries"
-    puts
-
-    FileUtils.cp_r "#{File.dirname(__FILE__)}/../lib/libraries/SWSerLCDpa/.", "#{sketch_name}/vendor/libraries/SWSerLCDpa"
-    puts "Installed SWSerLCDpa into #{sketch_name}/vendor/libraries"
-    puts
-
-    FileUtils.cp_r "#{File.dirname(__FILE__)}/../lib/libraries/SWSerLCDsf/.", "#{sketch_name}/vendor/libraries/SWSerLCDsf"
-    puts "Installed SWSerLCDsf into #{sketch_name}/vendor/libraries"
-    puts
-
-    FileUtils.cp_r "#{File.dirname(__FILE__)}/../lib/libraries/Wire/.", "#{sketch_name}/vendor/libraries/Wire"
-    puts "Installed Wire into #{sketch_name}/vendor/libraries"
-    puts
+    libs = %W{ AF_XPort AFSoftSerial DS1307 FrequencyTimer2 I2CEEPROM LoopTimer OneWire Servo Stepper SWSerLCDpa SWSerLCDsf Wire }
+    libs.each do |lib|
+      src = RAD_LIB.join('libraries',lib,'.')
+      dest = "#{sketch_name}/vendor/libraries/#{lib}"
+      FileUtils.cp_r src, dest
+      puts "Installed #{lib} into #{sketch_name}/vendor/libraries"
+    end
 
     # Build examples -- used for basic testing
 
