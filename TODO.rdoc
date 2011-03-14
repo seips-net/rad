@@ -15,4 +15,6 @@
 * check plugins/*.rb for updates
 * check examples/*.rb for updates
 * remove outdated code (< ruby 1.8.6) i.e. in setup.rb
-* cleanup bin/rad
+* clean up rad/option_parser like http://www.ruby-doc.org/stdlib/libdoc/optparse/rdoc/classes/OptionParser.html
+* set usefull default options and make them overwriteable by ~/.rad/options.yaml
+* check if setup.rb is still required
