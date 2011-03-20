@@ -3,7 +3,7 @@
 require 'rubygems'
 require 'pathname'
 require 'optparse'
-                          
+
 require 'yaml'
 require 'fileutils'
 require 'open-uri'
