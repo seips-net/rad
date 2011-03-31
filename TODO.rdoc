@@ -1,5 +1,6 @@
 = TODOs
 * rewrite rad/*_installer.rb
+* extract/install arduino correct rad/installer/mac.rb
 * update installer to uptodate arduino
 * remove/integrade rad/todo.txt
 * remove/integrade rad/antiquated_todo.txt

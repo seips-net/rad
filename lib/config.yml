@@ -1,0 +1,11 @@
+installer:
+  arduiuno:
+    version: arduino-0022
+    download:
+      linux: http://arduino.googlecode.com/files/arduino-0022.tgz
+      mac: http://arduino.googlecode.com/files/arduino-0022.dmg
+      windows: http://arduino.googlecode.com/files/arduino-0022.zip
+    application_dir:
+      linux: /opt
+      mac: /Application
+      windows: C:\opt
