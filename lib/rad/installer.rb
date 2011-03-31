@@ -1,7 +1,7 @@
-module Rad::Installer
+class Rad::Installer
   def self.run
-    require 'open-uri'
     require 'progressbar'
+    require RAD_LIB.join('rad','installer','base')
 
     case RUBY_PLATFORM
     when /linux/ # Linux
