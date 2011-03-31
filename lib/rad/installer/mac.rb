@@ -1,4 +1,4 @@
-module Rad::Installer::Mac
+class Rad::Installer::Mac < Rad::Installer::Base
 
   def self.run
     arduino_url = 'http://arduino.googlecode.com/files/arduino-0022.dmg'
