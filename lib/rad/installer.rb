@@ -1,6 +1,5 @@
 class Rad::Installer
   def self.run
-    require 'progressbar'
     require RAD_LIB.join('rad','installer','base')
 
     case RUBY_PLATFORM

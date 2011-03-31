@@ -15,7 +15,6 @@ begin
     gem.authors = ["JD Barnhart", "Greg Borenstein"]
     gem.add_dependency "ruby2c", ">= 1.0.0.7"
     gem.add_dependency "sexp_processor", ">=3.0.2"
-    gem.add_dependency "progressbar", "~> 0.9.0"
     gem.add_dependency "rubyzip", "~> 0.9.5"
     gem.add_dependency "thoughtbot-shoulda", ">= 0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
