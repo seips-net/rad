@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["JD Barnhart", "Greg Borenstein"]
-  s.date = %q{2011-03-11}
+  s.date = %q{2011-04-01}
   s.default_executable = %q{rad}
   s.description = %q{Ruby Arduino Development: a framework for programming the Arduino physcial computing platform using Ruby}
   s.email = %q{jd@jdbarnhart.com}
@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
     "TODO.rdoc",
     "VERSION",
     "bin/rad",
+    "lib/config.yml",
     "lib/examples/add_hysteresis.rb",
     "lib/examples/basic_blink.rb",
     "lib/examples/blink_m_address_assignment.rb",
@@ -68,42 +69,7 @@ Gem::Specification.new do |s|
     "lib/examples/toggle.rb",
     "lib/examples/twitter.rb",
     "lib/examples/two_wire.rb",
-    "lib/libraries/AFSoftSerial/AFSoftSerial.cpp",
-    "lib/libraries/AFSoftSerial/AFSoftSerial.h",
-    "lib/libraries/AFSoftSerial/keywords.txt",
-    "lib/libraries/AF_XPort/AF_XPort.cpp",
-    "lib/libraries/AF_XPort/AF_XPort.h",
-    "lib/libraries/DS1307/DS1307.cpp",
-    "lib/libraries/DS1307/DS1307.h",
-    "lib/libraries/DS1307/keywords.txt",
-    "lib/libraries/FrequencyTimer2/FrequencyTimer2.cpp",
-    "lib/libraries/FrequencyTimer2/FrequencyTimer2.h",
-    "lib/libraries/FrequencyTimer2/keywords.txt",
-    "lib/libraries/I2CEEPROM/I2CEEPROM.cpp",
-    "lib/libraries/I2CEEPROM/I2CEEPROM.h",
-    "lib/libraries/I2CEEPROM/keywords.txt",
-    "lib/libraries/LoopTimer/LoopTimer.cpp",
-    "lib/libraries/LoopTimer/LoopTimer.h",
-    "lib/libraries/LoopTimer/keywords.txt",
-    "lib/libraries/OneWire/OneWire.cpp",
-    "lib/libraries/OneWire/OneWire.h",
-    "lib/libraries/OneWire/keywords.txt",
-    "lib/libraries/OneWire/readme.txt",
-    "lib/libraries/SWSerLCDpa/SWSerLCDpa.cpp",
-    "lib/libraries/SWSerLCDpa/SWSerLCDpa.h",
-    "lib/libraries/SWSerLCDsf/SWSerLCDsf.cpp",
-    "lib/libraries/SWSerLCDsf/SWSerLCDsf.h",
-    "lib/libraries/Servo/Servo.cpp",
-    "lib/libraries/Servo/Servo.h",
-    "lib/libraries/Stepper/Stepper.cpp",
-    "lib/libraries/Stepper/Stepper.h",
-    "lib/libraries/Stepper/keywords.txt",
-    "lib/libraries/Wire/Wire.cpp",
-    "lib/libraries/Wire/Wire.h",
-    "lib/libraries/Wire/keywords.txt",
-    "lib/libraries/Wire/twi.h",
-    "lib/libraries/Wire/utility/twi.c",
-    "lib/libraries/Wire/utility/twi.h",
+    "lib/option_parser.rb",
     "lib/plugins/basics.rb",
     "lib/plugins/bitwise_ops.rb",
     "lib/plugins/blink.rb",
@@ -123,17 +89,18 @@ Gem::Specification.new do |s|
     "lib/plugins/spectra_symbol.rb",
     "lib/plugins/twitter_connect.rb",
     "lib/rad.rb",
-    "lib/rad/README.rdoc",
-    "lib/rad/antiquated_todo.txt",
     "lib/rad/arduino_plugin.rb",
     "lib/rad/arduino_sketch.rb",
-    "lib/rad/darwin_installer.rb",
+    "lib/rad/build.rb",
     "lib/rad/generators/makefile/makefile.erb",
     "lib/rad/generators/makefile/makefile.rb",
     "lib/rad/hardware_library.rb",
     "lib/rad/init.rb",
-    "lib/rad/linux_installer.rb",
-    "lib/rad/progressbar.rb",
+    "lib/rad/installer.rb",
+    "lib/rad/installer/base.rb",
+    "lib/rad/installer/linux.rb",
+    "lib/rad/installer/mac.rb",
+    "lib/rad/installer/windows.rb",
     "lib/rad/rad_processor.rb",
     "lib/rad/rad_rewriter.rb",
     "lib/rad/rad_type_checker.rb",
@@ -141,9 +108,11 @@ Gem::Specification.new do |s|
     "lib/rad/sketch_compiler.rb",
     "lib/rad/tasks/build_and_make.rake",
     "lib/rad/tasks/rad.rb",
-    "lib/rad/todo.txt",
+    "lib/rad/test.rb",
     "lib/rad/variable_processing.rb",
     "lib/rad/version.rb",
+    "lib/templates/Rakefile.erb",
+    "lib/templates/sketch.erb",
     "madrona-rad.gemspec",
     "project_dev.rake",
     "setup.rb",
@@ -186,18 +155,18 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<ruby2c>, [">= 1.0.0.7"])
       s.add_runtime_dependency(%q<sexp_processor>, [">= 3.0.2"])
-      s.add_runtime_dependency(%q<progressbar>, ["~> 0.9.0"])
-      s.add_development_dependency(%q<thoughtbot-shoulda>, [">= 0"])
+      s.add_runtime_dependency(%q<rubyzip>, ["~> 0.9.5"])
+      s.add_runtime_dependency(%q<thoughtbot-shoulda>, [">= 0"])
     else
       s.add_dependency(%q<ruby2c>, [">= 1.0.0.7"])
       s.add_dependency(%q<sexp_processor>, [">= 3.0.2"])
-      s.add_dependency(%q<progressbar>, ["~> 0.9.0"])
+      s.add_dependency(%q<rubyzip>, ["~> 0.9.5"])
       s.add_dependency(%q<thoughtbot-shoulda>, [">= 0"])
     end
   else
     s.add_dependency(%q<ruby2c>, [">= 1.0.0.7"])
     s.add_dependency(%q<sexp_processor>, [">= 3.0.2"])
-    s.add_dependency(%q<progressbar>, ["~> 0.9.0"])
+    s.add_dependency(%q<rubyzip>, ["~> 0.9.5"])
     s.add_dependency(%q<thoughtbot-shoulda>, [">= 0"])
   end
 end
