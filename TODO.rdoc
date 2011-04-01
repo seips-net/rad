@@ -1,4 +1,6 @@
 = TODOs
+* add sha1 check for downloaded arduino files rad/installer/*
+* skip download of arduino file, when exists and sha1 check ok
 * rewrite rad/*_installer.rb
 * extract/install arduino correct rad/installer/mac.rb
 * extract/install arduino correct rad/installer/linux.rb
