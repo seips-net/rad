@@ -4,7 +4,7 @@ require 'zip/zip'
 class Rad::Installer::Base
 
   def self.download(from_url, to_file)
-    puts "Downloading form '#{from_url}' to '#{to_file}' ..."
+    puts "Downloading from '#{from_url}' to '#{to_file}' ..."
     open(from_url, 'r', :read_timeout=>600) {|f|
       File.open(to_file,"wb") do |file|
         file.puts f.read
