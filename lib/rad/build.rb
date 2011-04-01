@@ -1,9 +1,12 @@
+require 'erb'
+
 class Rad::Build
   class << self; attr_accessor :sketch_name end
   def self.run
-    
+
+    options, parser = OptionParser.parse(ARGV)
     @sketch_name = ARGV[0]
-    raise "Sketchname is missing" unless @sketch_name
+    parser.parse!(["-h"]) unless @sketch_name
 
     vendor_rad
     libraries
@@ -85,24 +88,7 @@ class Rad::Build
 
     FileUtils.touch "#{@sketch_name}/#{@sketch_name}.rb"
     File.open("#{@sketch_name}/#{@sketch_name}.rb", "w") do |file|
-      file << <<-EOS
-    class #{@sketch_name.split("_").collect{|c| c.capitalize}.join("")} < ArduinoSketch
-
-    # looking for hints?  check out the examples directory
-    # example sketches can be uploaded to your arduino with
-    # rake make:upload sketch=examples/hello_world
-    # just replace hello_world with other examples
-    #
-    # hello world (replace with your code):
-
-    output_pin 13, :as => :led
-
-    def loop
-    blink led, 100
-    end
-
-    end
-      EOS
+      file << ERB.new(File.read(RAD_LIB + 'templates' + 'sketch.erb')).run
     end
     puts "Added #{@sketch_name}/#{@sketch_name}.rb"
   end
