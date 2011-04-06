@@ -50,9 +50,9 @@ class Rad::Build
     # puts
   end
 
-  def self.plugin
+  def self.plugins
     FileUtils.mkdir_p "#{@sketch_name}/vendor/plugins"
-    FileUtils.cp_r "#{File.dirname(__FILE__)}/../lib/plugins/.", "#{@sketch_name}/vendor/plugins"
+    FileUtils.cp_r RAD_LIB.join('plugins'), "#{@sketch_name}/vendor/plugins"
   end
   
   def self.sketch
