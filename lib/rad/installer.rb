@@ -14,7 +14,7 @@ class Rad::Installer
     when /mingw32/ # Windows
       require RAD_LIB.join('rad','installer','windows')
       Rad::Installer::Windows.run
-      
+
     else
       raise "Sorry. Your operation system was not detected as one of the supported systems."
     end

@@ -26,13 +26,10 @@ class Rad::Build
   
   def self.libraries
     FileUtils.mkdir_p "#{@sketch_name}/vendor/libraries"
-
-    libs = %W{ AF_XPort AFSoftSerial DS1307 FrequencyTimer2 I2CEEPROM LoopTimer OneWire Servo Stepper SWSerLCDpa SWSerLCDsf Wire }
-    libs.each do |lib|
-      src = RAD_LIB.join('libraries',lib,'.')
-      dest = "#{@sketch_name}/vendor/libraries/#{lib}"
-      FileUtils.cp_r src, dest
-    end
+    application_dir = Pathname.new($config['arduino']['application_dir'][$config['os']])
+    src = application_dir.join($config['arduino']['version'],'libraries')
+    dest = "#{@sketch_name}/vendor/libraries/"
+    FileUtils.cp_r src, dest
   end
 
   def self.examples
