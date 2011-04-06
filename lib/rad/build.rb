@@ -33,8 +33,8 @@ class Rad::Build
   end
 
   def self.examples
-    FileUtils.mkdir_p "#{@sketch_name}/vendor/libraries"
-    FileUtils.cp_r "#{File.dirname(__FILE__)}/../lib/examples/.", "#{@sketch_name}/examples"
+    FileUtils.mkdir_p "#{@sketch_name}/examples"
+    FileUtils.cp_r RAD_LIB.join('examples'), "#{@sketch_name}/examples"
   end
   
   def self.test
