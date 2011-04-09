@@ -21,20 +21,20 @@ class Rad::Build
 
   def self.vendor_rad
     FileUtils.mkdir_p "#{@sketch_name}/vendor/rad"
-    FileUtils.cp_r RAD_LIB.join('rad'), "#{@sketch_name}/vendor/rad"
+    FileUtils.cp_r RAD_LIB.join('rad'), "#{@sketch_name}/vendor"
   end
   
   def self.libraries
     FileUtils.mkdir_p "#{@sketch_name}/vendor/libraries"
     application_dir = Pathname.new($config['arduino']['application_dir'][$config['os']])
     src = application_dir.join($config['arduino']['version'],'libraries')
-    dest = "#{@sketch_name}/vendor/libraries/"
+    dest = "#{@sketch_name}/vendor"
     FileUtils.cp_r src, dest
   end
 
   def self.examples
     FileUtils.mkdir_p "#{@sketch_name}/examples"
-    FileUtils.cp_r RAD_LIB.join('examples'), "#{@sketch_name}/examples"
+    FileUtils.cp_r RAD_LIB.join('examples'), "#{@sketch_name}/"
   end
   
   def self.test
@@ -52,7 +52,7 @@ class Rad::Build
 
   def self.plugins
     FileUtils.mkdir_p "#{@sketch_name}/vendor/plugins"
-    FileUtils.cp_r RAD_LIB.join('plugins'), "#{@sketch_name}/vendor/plugins"
+    FileUtils.cp_r RAD_LIB.join('plugins'), "#{@sketch_name}/vendor"
   end
   
   def self.sketch
