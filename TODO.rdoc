@@ -1,11 +1,9 @@
 = TODOs
 * add sha1 check for downloaded arduino files rad/installer/*
 * skip download of arduino file, when exists and sha1 check ok
-* rewrite rad/*_installer.rb
 * extract/install arduino correct rad/installer/mac.rb
 * extract/install arduino correct rad/installer/linux.rb
 * enhance rad/installer/linux to use 64bit arduino if possible
-* update installer to uptodate arduino
 * remove/integrade rad/todo.txt
 * remove/integrade rad/antiquated_todo.txt
 * remove/integrade rad/README.rdoc
@@ -25,6 +23,7 @@
 * check if setup.rb is still required
 * add progressbar to Rad::Installer::*.download
 * check old todos, move or delete the old todos
+* fix Rakefile creation in rad/build
 
 
 = Old todos

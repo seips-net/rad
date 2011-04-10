@@ -1,7 +1,10 @@
 require 'erb'
+require 'ostruct'
 
 class Rad::Build
-  class << self; attr_accessor :sketch_name end
+  class << self
+    attr_accessor :sketch_name
+  end
   def self.run
 
     options, parser = OptionParser.parse(ARGV)
@@ -58,14 +61,21 @@ class Rad::Build
   def self.sketch
     FileUtils.mkdir_p "#{@sketch_name}/#{@sketch_name}"
     FileUtils.touch "#{@sketch_name}/#{@sketch_name}.rb"
+    #todo dry and use to_camelcase
+    sketch_name_cc = @sketch_name.split("_").collect{|c| c.capitalize}.join("")
+    template = File.read(RAD_LIB + 'templates' + 'sketch.erb')
+    erb = ERB.new(template)
     File.open("#{@sketch_name}/#{@sketch_name}.rb", "w") do |file|
-      file << ERB.new(File.read(RAD_LIB + 'templates' + 'sketch.erb')).run
+      file.write erb.result(binding)
     end
   end
 
   def self.rake_file
+    FileUtils.touch "#{@sketch_name}/Rakefile"
+    template = File.read(RAD_LIB + 'templates' + 'Rakefile.erb')
+    erb = ERB.new(template)
     File.open("#{@sketch_name}/Rakefile", 'w') do |file|
-      file << ERB.new(File.read(RAD_LIB + 'templates' + 'Rakefile.erb')).run
+      file.write erb.result(binding)
     end
   end
   
