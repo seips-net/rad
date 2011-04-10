@@ -4,6 +4,10 @@ RAD is a framework for programming the Arduino physcial computing platform using
 
 For a full introduction see http://rad.rubyforge.org
 
+==Development Information
+
+This is a development version of RAD. At the moment the this version is not working and in full redesign. To support this redesign read the TODO file.
+
 ==Documentation
 
 The main documentation is here: ArduinoSketch.
