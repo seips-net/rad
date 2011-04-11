@@ -3,11 +3,11 @@ require 'ostruct'
 
 class Rad::Build
   class << self
-    attr_accessor :sketch_name
+    attr_accessor :sketch_name, :options
   end
   def self.run
 
-    options, parser = OptionParser.parse(ARGV)
+    @options, parser = OptionParser.parse(ARGV)
     @sketch_name = ARGV[0]
     parser.parse!(["-h"]) unless @sketch_name
 
@@ -81,26 +81,23 @@ class Rad::Build
   
   def self.config
     FileUtils.mkdir_p "#{@sketch_name}/config"
-    File.open("#{@sketch_name}/config/hardware.yml", 'w') do |file|
-      file << "##############################################################
-    # Today's MCU Choices (replace the mcu with your arduino board)
-    # atmega8 => Arduino NG or older w/ ATmega8
-    # atmega168 => Arduino NG or older w/ ATmega168
-    # mini => Arduino Mini
-    # bt  => Arduino BT
-    # diecimila  => Arduino Diecimila or Duemilanove w/ ATmega168
-    # nano  => Arduino Nano
-    # lilypad  => LilyPad Arduino
-    # pro => Arduino Pro or Pro Mini (8 MHz)
-    # atmega328 => Arduino Duemilanove w/ ATmega328
-    # mega => Arduino Mega
 
-      "
-      file << options["hardware"].to_yaml
+    FileUtils.touch "#{@sketch_name}/config/hardware.yml"
+    FileUtils.touch "#{@sketch_name}/config/software.yml"
+
+    hardware = @options["hardware"].to_yaml
+    software = @options["software"].to_yaml
+
+    template = File.read(RAD_LIB + 'templates' + 'config_hardware.erb')
+    erb = ERB.new(template)
+    File.open("#{@sketch_name}/config/hardware.yml", 'w') do |file|
+      file.write erb.result(binding)
     end
-    
+
+    template = File.read(RAD_LIB + 'templates' + 'config_software.erb')
+    erb = ERB.new(template)
     File.open("#{@sketch_name}/config/software.yml", 'w') do |file|
-      file << options["software"].to_yaml
+      file.write erb.result(binding)
     end
   end
 
