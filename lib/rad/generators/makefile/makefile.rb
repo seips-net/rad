@@ -11,15 +11,15 @@ class Makefile
       params = params.merge board_config
       params['target'] = build_dir.split("/").last
            
-      params['libraries_root'] = "#{File.expand_path(RAD_ROOT)}/vendor/libraries"
+      params['libraries_root'] = PROJECT_ROOT.join('vendor','libraries')
       params['libraries'] = $load_libraries # load only libraries used 
       
       # needed along with ugly hack of including another copy of twi.h in wire, when using the Wire.h library
-      params['twi_c'] = $load_libraries.include?("Wire") ? "#{params['arduino_root']}/hardware/libraries/Wire/utility/twi.c" : "" 
+      params['twi_c'] = $load_libraries.include?("Wire") ? params['arduino_root'].join('hardware','libraries','Wire','utility','twi.c') : ''
       
-      params['asm_files'] = Dir.entries( File.expand_path(RAD_ROOT) + "/" + PROJECT_DIR_NAME ).select{|e| e =~ /\.S/}            
+      params['asm_files'] = PROJECT_ROOT.join(PROJECT_DIR_NAME).entries.select{|e| e =~ /\.S/}
             
-      e = ERB.new File.read("#{File.dirname(__FILE__)}/makefile.erb")
+      e = ERB.new File.read(PROJECT_ROOT.join(makefile.erb))
       
       File.open("#{build_dir}/Makefile", "w") do |f|
         f << e.result(binding)
@@ -27,19 +27,17 @@ class Makefile
     end
         
     def hardware_params
-      return @hardware_params if @hardware_params
-      return @hardware_params = YAML.load_file( "#{RAD_ROOT}/config/hardware.yml")
+      @hardware_params ||= YAML.load_file(PROJECT_ROOT.join('config','hardware.yml'))
     end
       
     def software_params
-      return @software_params if @software_params
-      return @software_params = YAML.load_file( "#{RAD_ROOT}/config/software.yml" )
+      @software_params ||= YAML.load_file(PROJECT_ROOT.join('config','software.yml'))
     end
     
     ## match the mcu with the proper board configuration from the arduino board.txt file
     def board_configuration(arduino_root, board_name)
       board_configuration = {}
-      File.open("#{arduino_root}/hardware/boards.txt", "r") do |infile|
+      File.open(arduino_root.join('hardware','arduino','boards.txt'), "r") do |infile|
       	infile.each_line do |line|
       	  next unless line.chomp =~ /^#{board_name}\.([^=]*)=(.*)$/
       	  board_configuration[$1] = $2
