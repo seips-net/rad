@@ -118,7 +118,7 @@ class TestTranslationPostProcessing < Test::Unit::TestCase
   end
 
   def util_translate meth
-    RADProcessor.translate("test/fixture.rb", :TranslationTesting, meth)
+    RadProcessor.translate("test/fixture.rb", :TranslationTesting, meth)
   end
   
   ## need to look at unsigned long 

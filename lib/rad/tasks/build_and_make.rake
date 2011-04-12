@@ -88,7 +88,7 @@ namespace :build do
     # until we better understand RubyToC let's see what's happening on errors
     @sketch.sketch_methods.each do |meth|   
       # use the shiny new RubyToC  version 
-      raw_rtc_meth = RADProcessor.translate(@sketch.path, @sketch.klass.intern, meth.intern)
+      raw_rtc_meth = RadProcessor.translate(@sketch.path, @sketch.klass.intern, meth.intern)
       puts "Translator Error: #{raw_rtc_meth.inspect}" if raw_rtc_meth =~ /\/\/ ERROR:/ 
       c_methods << raw_rtc_meth unless meth == "setup"
       # treat the setup method differently

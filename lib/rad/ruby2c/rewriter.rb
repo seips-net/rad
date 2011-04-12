@@ -1,6 +1,6 @@
 require 'ruby_to_ansi_c'
 
-class RADRewriter < Rewriter
+class RadRewriter < Rewriter
   def initialize # :nodoc:
     super
     self.auto_shift_type = true

@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'ruby_to_ansi_c'
 
 # HACK: you should require your dependencies
@@ -12,7 +11,7 @@ class Environment # HACK until ruby_parser is re-released
   end
 end
 
-class RADProcessor < RubyToAnsiC
+class RadProcessor < RubyToAnsiC
 
   @translator = nil
 
@@ -44,8 +43,8 @@ class RADProcessor < RubyToAnsiC
   def self.translator
     unless @translator then
       @translator = CompositeSexpProcessor.new
-      @translator << RADRewriter.new
-      @translator << RADTypeChecker.new
+      @translator << RadRewriter.new
+      @translator << RadTypeChecker.new
       # HACK: more harm than good @translator << CRewriter.new
       @translator << self.new
 

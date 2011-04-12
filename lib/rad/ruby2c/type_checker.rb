@@ -1,6 +1,6 @@
 require 'ruby_to_ansi_c'
 
-class RADTypeChecker < TypeChecker
+class RadTypeChecker < TypeChecker
   
   def process_const(exp)
     c = exp.shift
