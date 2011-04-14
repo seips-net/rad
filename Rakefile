@@ -1,18 +1,17 @@
 require 'rubygems'
 require 'rake'
-
 require 'yaml'
 YAML::ENGINE.yamler='psych' if defined?(YAML::ENGINE)
 
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "madrona-rad"
-    gem.summary = %Q{RAD: Ruby Arduino Development - 0.4.1 -- 1.9 Ready!}
+    gem.name = "seips-net-rad"
+    gem.summary = %Q{RAD: Ruby Arduino Development}
     gem.description = %Q{Ruby Arduino Development: a framework for programming the Arduino physcial computing platform using Ruby}
     gem.email = "jd@jdbarnhart.com"
-    gem.homepage = "http://github.com/madrona/madrona-rad"
-    gem.authors = ["JD Barnhart", "Greg Borenstein"]
+    gem.homepage = "http://github.com/seips-net/rad"
+    gem.authors = ["Christof Spies", "JD Barnhart", "Greg Borenstein"]
     gem.add_dependency "ruby2c", ">= 1.0.0.7"
     gem.add_dependency "sexp_processor", ">=3.0.2"
     gem.add_dependency "rubyzip", "~> 0.9.5"
@@ -52,7 +51,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "madrona-rad #{version}"
+  rdoc.title = "seips-net-rad #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
