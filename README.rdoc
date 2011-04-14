@@ -16,6 +16,18 @@ Build package:
 
  rake build
 
+Rad requires rubyzip 0.9.5 (not released jet [https://github.com/aussiegeek/rubyzip/pull/1]):
+
+ git clone https://github.com/dv1/rubyzip.git
+ cd rubyzip
+ gem build rubyzip.gemspec
+ gem install rubyzip-0.9.5.gem
+
+Install RAD:
+
+ gem install pkg/seips-net-rad-0.5.0.gem
+
+
 ==Documentation
 
 The main documentation is here: ArduinoSketch.
