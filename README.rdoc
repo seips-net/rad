@@ -8,6 +8,14 @@ For a full introduction see http://rad.rubyforge.org
 
 This is a development version of RAD. At the moment the this version is not working and in full redesign. To support this redesign read the TODO file.
 
+Build gemspec:
+
+ rake gemspec
+
+Build package:
+
+ rake build
+
 ==Documentation
 
 The main documentation is here: ArduinoSketch.
