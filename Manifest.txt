@@ -121,7 +121,6 @@ lib/rad/todo.txt
 lib/rad/variable_processing.rb
 lib/rad/version.rb
 scripts/txt2html
-setup.rb
 spec/examples/hello_world.rb
 spec/examples/serial_motor.rb
 spec/models/arduino_sketch_spec.rb
