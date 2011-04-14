@@ -6,7 +6,7 @@ class Rad::Installer::Windows < Rad::Installer::Base
     arduino_file = opt_dir + arduino_url.split('/').last
 
     download arduino_url, arduino_file
-    extract arduino_file, opt_dir
+    extract_zip arduino_file, opt_dir
 
     text = <<-TEXT
 To install Arduino on Windows follow the instructions on the Website.

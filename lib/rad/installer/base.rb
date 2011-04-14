@@ -14,7 +14,7 @@ class Rad::Installer::Base
 
   # bug in rubyzip hope to be fixed in 0.9.5
   # https://github.com/aussiegeek/rubyzip/pull/1
-  def self.extract(from_file, to_dir)
+  def self.extract_zip(from_file, to_dir)
     extract_path = to_dir + from_file.basename('.zip')
     Zip::ZipFile.open(from_file) { |zip_file|
       zip_file.each { |f|
