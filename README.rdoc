@@ -8,6 +8,18 @@ For a full introduction see http://rad.rubyforge.org
 
 This is a development version of RAD. At the moment the this version is not working and in full redesign. To support this redesign read the TODO file.
 
+Rad requires rubyzip 0.9.5 to extract zip-file in windows (not released jet [https://github.com/aussiegeek/rubyzip/pull/1]):
+
+ git clone https://github.com/dv1/rubyzip.git
+ cd rubyzip
+ gem build rubyzip.gemspec
+ gem install rubyzip-0.9.5.gem
+
+Get source:
+
+ git clone git@github.com:seips-net/rad.git
+ cd rad
+
 Build gemspec:
 
  rake gemspec
@@ -16,14 +28,7 @@ Build package:
 
  rake build
 
-Rad requires rubyzip 0.9.5 (not released jet [https://github.com/aussiegeek/rubyzip/pull/1]):
-
- git clone https://github.com/dv1/rubyzip.git
- cd rubyzip
- gem build rubyzip.gemspec
- gem install rubyzip-0.9.5.gem
-
-Install RAD:
+Install RAD package:
 
  gem install pkg/seips-net-rad-0.5.0.gem
 
