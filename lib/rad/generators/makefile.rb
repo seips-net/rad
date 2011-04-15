@@ -19,7 +19,7 @@ class Makefile
       
       params['asm_files'] = PROJECT_ROOT.join(PROJECT_DIR_NAME).entries.select{|e| e =~ /\.S/}
             
-      e = ERB.new File.read(PROJECT_ROOT.join(makefile.erb))
+      e = ERB.new File.read(RAD_LIB.join('templates','makefile.erb'))
       
       File.open("#{build_dir}/Makefile", "w") do |f|
         f << e.result(binding)
