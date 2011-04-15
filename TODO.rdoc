@@ -1,4 +1,5 @@
 = TODOs
+* build gem packages for different os to solve the dependency problems in install/base#extract_*
 * add sha1 check for downloaded arduino files rad/installer/*
 * skip download of arduino file, when exists and sha1 check ok
 * extract/install arduino correct rad/installer/mac.rb
