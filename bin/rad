@@ -2,30 +2,5 @@
 
 require 'rubygems'
 require 'pathname'
-require 'optparse'
 
-require 'yaml'
-require 'fileutils'
-require 'open-uri'
-require 'readline'
-require 'progressbar'
-
-RAD_LIB = Pathname.new(__FILE__).expand_path.dirname.join('..','lib')
-require RAD_LIB.join('rad')
-require RAD_LIB.join('option_parser')
-
-# home = ENV['HOME'] || ENV['USERPROFILE'] || ENV['HOMEPATH']
-# begin
-#   config = YAML::load open(home + "/.rad")
-# rescue
-#   config = false
-# end
-#
-
-if ARGV[0] == "install"
-  Rad::Installer.run
-elsif ARGV[0] == "test"
-  Rad::Test.run
-else
-  Rad::Build.run
-end
+require Pathname.new(__FILE__).expand_path.dirname.join('..','lib','rad')
