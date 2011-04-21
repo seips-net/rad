@@ -6,13 +6,9 @@ require 'fileutils'
 require 'open-uri'
 require 'readline'
 
-RAD_LIB = Pathname.new(__FILE__).expand_path.dirname.join('..','lib')
+require 'active_support/dependencies'
 
-require RAD_LIB.join('option_parser')
-require RAD_LIB.join('rad','version')
-require RAD_LIB.join('rad','installer')
-require RAD_LIB.join('rad','build')
-require RAD_LIB.join('rad','config')
+ActiveSupport::Dependencies.autoload_paths << Pathname.new(__FILE__).expand_path.dirname
 
 module Rad
 end
