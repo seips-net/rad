@@ -1,4 +1,4 @@
-module Rad #:nodoc:
+class Rad #:nodoc:
   module VERSION #:nodoc:
     MAJOR = 0
     MINOR = 3

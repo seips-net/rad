@@ -3,4 +3,4 @@
 require 'rubygems'
 require 'pathname'
 
-require Pathname.new(__FILE__).expand_path.dirname.join('..','lib','rad')
+require Pathname.new(__FILE__).expand_path.dirname.join('..','lib','main')
