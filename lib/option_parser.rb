@@ -46,7 +46,7 @@ class OptionParser #:nodoc:
       options["software"]["arduino_root"] = arduino if arduino
     end
 
-    opts.on("-v", "--version [VERSION]",
+    opts.on("-v", "--version",
             "RAD version number",
             "   (#{Rad::VERSION::STRING})") do
       puts Rad::VERSION::STRING
