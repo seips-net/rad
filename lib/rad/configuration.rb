@@ -1,6 +1,6 @@
 require 'yaml'
 
-class Rad::Config
+class Rad::Configuration
   def self.run
     load_config
     detect_os
