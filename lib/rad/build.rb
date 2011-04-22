@@ -11,7 +11,6 @@ class Rad::Build
     @sketch_name = ARGV[0]
     parser.parse!(["-h"]) unless @sketch_name
 
-    vendor_rad
     libraries
     examples
     test
@@ -20,11 +19,6 @@ class Rad::Build
     rake_file
     config
     text
-  end
-
-  def self.vendor_rad
-    FileUtils.mkdir_p "#{@sketch_name}/vendor/rad"
-    FileUtils.cp_r RAD_LIB.join('rad'), "#{@sketch_name}/vendor"
   end
   
   def self.libraries
