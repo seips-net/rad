@@ -7,6 +7,6 @@ PLUGIN_C_VAR_TYPES = "int|void|unsigned|long|short|uint8_t|static|byte|char\\*|u
 
 gem "ruby2c", "~>1.0.0.6"
 
-%w(generators/makefile.rb rad_processor.rb rad_rewriter.rb rad_type_checker.rb variable_processing.rb arduino_sketch.rb arduino_plugin.rb hardware_library.rb tasks/rad.rb sketch_compiler.rb).each do |path|
-  require PROJECT_ROOT.join('vendor','rad',path)
-end
+#%w(generators/makefile.rb rad_processor.rb rad_rewriter.rb rad_type_checker.rb variable_processing.rb arduino_sketch.rb arduino_plugin.rb hardware_library.rb tasks/rad.rb sketch_compiler.rb).each do |path|
+#  require RAD_LIB.join('rad',path)
+#end
