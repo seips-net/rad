@@ -17,7 +17,7 @@ class Rad
       Rad::Installer.run
     elsif ARGV[0] == "test"
       Rad::Test.run
-    else
+    elseif ARGV[0] == "create"
       Rad::Build.run
     end
   end
