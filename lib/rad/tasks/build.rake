@@ -102,20 +102,19 @@ namespace :build do
   end
 
   task :file_list do
-    # take another look at this, since if the root directory name is changed, everything breaks
-    # perhaps we generate a constant when the project is generated an pop it here or in the init file
-    if ENV['sketch']
-      @sketch = SketchCompiler.new File.expand_path("#{ENV['sketch']}.rb")
-    else
-      # assume the only .rb file in the sketch dir is the sketch:
-      @sketch = SketchCompiler.new Dir.glob("#{File.expand_path(File.dirname(__FILE__))}/../../../*.rb").first
-    end
+    raise "There is no directory #{PROJECT_ROOT}." unless PROJECT_ROOT.directory?
 
+    sketch_dir_name = PROJECT_ROOT.basename
+    sketch_file =  PROJECT_ROOT + (sketch_dir_name.to_s + '.rb')
+
+    raise 'Directory is not containing a .rb sketch file with name of the directory.' unless sketch_file.file?
+
+    @sketch = SketchCompiler.new sketch_file
+    
     @plugin_names = []
-    Dir.entries( File.expand_path("#{RAD_ROOT}/vendor/plugins/") ).each do |f|
-      if (f =~ /\.rb$/)
-        @plugin_names << f
-      end
+
+    RAD_LIB.join('plugins').children.each do |child|
+      @plugin_names << child if child.file? and child.extname == '.rb'
     end
   end
 end
