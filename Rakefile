@@ -13,7 +13,7 @@ begin
     gem.homepage = "http://github.com/seips-net/rad"
     gem.authors = ["Christof Spies", "JD Barnhart", "Greg Borenstein"]
     gem.add_dependency "activesupport", "~>3.0.6"
-    gem.add_dependency "ruby2c", ">= 1.0.0.7"
+    gem.add_dependency "ruby2c", "~> 1.0.0.7"
     gem.add_dependency "sexp_processor", ">=3.0.2"
     gem.add_dependency "rubyzip", "~> 0.9.5"
     gem.add_dependency "thoughtbot-shoulda", ">= 0"
