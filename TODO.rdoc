@@ -1,4 +1,5 @@
 = TODOs
+* remove code from rake files and move it to rad classes
 * build gem packages for different os to solve the dependency problems in install/base#extract_*
 * add sha1 check for downloaded arduino files rad/installer/*
 * skip download of arduino file, when exists and sha1 check ok
@@ -19,7 +20,6 @@
 * set usefull default options and make them overwriteable by ~/.rad/options.yaml
 * add progressbar to Rad::Installer::*.download
 * check old todos, move or delete the old todos
-* fix Rakefile creation in rad/build
 
 
 = Old todos
