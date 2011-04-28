@@ -9,7 +9,7 @@
 
 # require 'arduino_sketch'
 
-class SketchCompiler
+class Rad::SketchCompiler
   attr_accessor :path, :body, :klass, :target_dir, :name
   
   def initialize path_to_sketch 

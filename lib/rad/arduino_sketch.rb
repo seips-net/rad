@@ -151,11 +151,9 @@
 #   most notably, we keep track of all external variables and let the translator know they exist 
 #
 
-require 'active_support/core_extensions/string/inflections'
-
 class Rad::ArduinoSketch
   
-  include ExternalVariableProcessing
+  include Rad::ExternalVariableProcessing
 
   RAD_LIB.join('rad','arduino_sketch').children.each do |c|
     s = c.basename('.rb').to_s
