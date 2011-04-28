@@ -152,7 +152,7 @@
 #   
 #   
 
-class ArduinoSketch
+class Rad::ArduinoSketch
   
   include ExternalVariableProcessing
   
