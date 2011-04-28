@@ -149,28 +149,19 @@
 #
 #   added some checking to c translation that (hopefully) makes it a bit more predictable
 #   most notably, we keep track of all external variables and let the translator know they exist 
-#   
-#   
+#
+
+require 'active_support/core_extensions/string/inflections'
 
 class Rad::ArduinoSketch
   
   include ExternalVariableProcessing
 
-  # include devices #todo do autoinclude for all Modules
-  include Rad::ArduinoSketch::Base
-  include Rad::ArduinoSketch::Debounce
-  include Rad::ArduinoSketch::Ethernet
-  include Rad::ArduinoSketch::FrequencyGenerator
-  include Rad::ArduinoSketch::Hysteresis
-  include Rad::ArduinoSketch::I2c
-  include Rad::ArduinoSketch::I2cBlinkm
-  include Rad::ArduinoSketch::I2cDs1307
-  include Rad::ArduinoSketch::I2cEeprom
-  include Rad::ArduinoSketch::Onewire
-  include Rad::ArduinoSketch::PaLcd
-  include Rad::ArduinoSketch::Servo
-  include Rad::ArduinoSketch::SfLcd
-  include Rad::ArduinoSketch::Spectra
+  RAD_LIB.join('rad','arduino_sketch').children.each do |c|
+    s = c.basename('.rb').to_s
+    m = s.camelize.constantize
+    inclube m unless s == 'hardware_library'
+  end
   
   # find another way to do this
   @@twowire_inc	  = FALSE
