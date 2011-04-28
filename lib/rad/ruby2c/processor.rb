@@ -1,8 +1,5 @@
 require 'ruby_to_ansi_c'
 
-# HACK: you should require your dependencies
-$array_index_helpers ||= ('a'..'zzz').to_a
-
 class Environment # HACK until ruby_parser is re-released
   alias :old_all :all
   def all
@@ -11,7 +8,7 @@ class Environment # HACK until ruby_parser is re-released
   end
 end
 
-class RadProcessor < RubyToAnsiC
+class Rad::Ruby2c::Processor < RubyToAnsiC
 
   @translator = nil
 
@@ -43,8 +40,8 @@ class RadProcessor < RubyToAnsiC
   def self.translator
     unless @translator then
       @translator = CompositeSexpProcessor.new
-      @translator << RadRewriter.new
-      @translator << RadTypeChecker.new
+      @translator << Rad::Ruby2c::Rewriter.new
+      @translator << Rad::Ruby2c::TypeChecker.new
       # HACK: more harm than good @translator << CRewriter.new
       @translator << self.new
 
