@@ -67,7 +67,9 @@ namespace :build do
   desc "add plugin methods"
   task :plugin_setup do
     $plugins_to_load.each do |name|
-       klass = name.split(".").first.split("_").collect{|c| c.capitalize}.join("")
+       klass = name.camelize
+       puts klass
+
        eval "class #{klass} < ArduinoPlugin; end;"
 
        @@ps = ArduinoPlugin.new
@@ -82,7 +84,8 @@ namespace :build do
          CODE
        end
 
-      eval ArduinoPlugin.process(File.read("vendor/plugins/#{name}"))
+      puts name
+      ArduinoPlugin.process(File.read(RAD_LIB.join('plugins', (name + '.rb'))))
 
     end
     @@no_plugins = ArduinoPlugin.new if @plugin_names.empty?
@@ -91,7 +94,7 @@ namespace :build do
   desc "determine which plugins to load based on use of methods in sketch"
   task :gather_required_plugins do
     @plugin_names.each do |name|
-       ArduinoPlugin.check_for_plugin_use(@sketch.body, File.read("vendor/plugins/#{name}"), name )
+      ArduinoPlugin.check_for_plugin_use(@sketch.body, File.read(name), name.basename('.rb').to_s )
     end
     puts "#{$plugins_to_load.length} of #{$plugin_methods_hash.length} plugins are being loaded:  #{$plugins_to_load.join(", ")}"
   end
@@ -109,7 +112,7 @@ namespace :build do
 
     raise 'Directory is not containing a .rb sketch file with name of the directory.' unless sketch_file.file?
 
-    @sketch = SketchCompiler.new sketch_file
+    @sketch = Rad::SketchCompiler.new sketch_file
     
     @plugin_names = []
 
