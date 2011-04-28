@@ -5,6 +5,7 @@ module Rad::ArduinoSketch::Hysteresis
   def initialize #:nodoc:
     @hysteresis_settings = []
     @hysteresis_pins = []
+    super
   end
 
 end

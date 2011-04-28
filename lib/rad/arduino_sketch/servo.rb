@@ -6,6 +6,7 @@ module Rad::ArduinoSketch::Servo
   def initialize #:nodoc:
     @servo_settings = []
     @servo_pins = []
+    super
   end
 
   def output_pin_servo(num, opts={})

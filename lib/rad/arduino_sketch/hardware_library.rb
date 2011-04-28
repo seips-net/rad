@@ -1,4 +1,4 @@
-class HardwareLibrary < ArduinoSketch
+class Rad::ArduinoSketch::HardwareLibrary < ArduinoSketch
   
   def initialize
     super

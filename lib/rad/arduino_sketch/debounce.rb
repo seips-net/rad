@@ -6,6 +6,7 @@ module Rad::ArduinoSketch::Debounce
   def initialize #:nodoc:
     @debounce_settings = []
     @debounce_pins = []
+    super
   end
 
 end
