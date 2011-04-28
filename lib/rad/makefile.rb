@@ -1,7 +1,7 @@
 require 'erb'
 require 'yaml'
 
-class Makefile
+class Rad::Makefile
   class << self
     
     # build the sketch Makefile for the given template based on the values in its software and hardware config files
