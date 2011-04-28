@@ -1,5 +1,7 @@
 require 'yaml'
 
+PLUGIN_C_VAR_TYPES = %w{ int void unsigned long short uint8_t static byte char* uint8_t }
+
 class Rad::Configuration
   def self.run
     load_config
