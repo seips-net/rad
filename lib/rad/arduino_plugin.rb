@@ -44,27 +44,26 @@
 
 class Rad::ArduinoPlugin
   
-def initialize #:nodoc:
+  def initialize #:nodoc:
   
-  $plugin_directives = $plugin_directives || []
-  $plugin_external_variables = $plugin_external_variables || []
-  # moved to check_for_plugin_use $plugin_structs = $plugin_structs || {}
-  $plugin_signatures = $plugin_signatures || []
-  $plugin_methods = $plugin_methods || []
- # $plugin_methods_hash = $plugin_methods_hash || {}  ### new
- # $plugins_to_load = $plugins_to_load || []  ### new
-  $add_to_setup = $add_to_setup || []
-  $load_libraries = $load_libraries || []
+    $plugin_directives ||= []
+    $plugin_external_variables ||= []
+    # moved to check_for_plugin_use $plugin_structs = $plugin_structs || {}
+    $plugin_signatures ||= []
+    $plugin_methods ||= []
+    # $plugin_methods_hash ||= {}  ### new
+    # $plugins_to_load ||= []  ### new
+    $add_to_setup ||= []
+    $load_libraries ||= []
 
-
-end
+  end
   
-# c declarations are automatic
-# you won't need them in the plugins
-# so, the first thing we can do is gather all the plugin methods, and scan the 
-# sketch available plugins...
-# if the sketch has them, we include the plugins in the build...
-# otherwise not..
+  # c declarations are automatic
+  # you won't need them in the plugins
+  # so, the first thing we can do is gather all the plugin methods, and scan the
+  # sketch available plugins...
+  # if the sketch has them, we include the plugins in the build...
+  # otherwise not..
 
   def include_wire
     $load_libraries << "Wire" unless $load_libraries.include?("Wire")
@@ -73,32 +72,32 @@ end
 
   def add_to_setup(*args)
     if args
-       args.each do |arg|
-         $add_to_setup << arg
-       end
-     end
+      args.each do |arg|
+        $add_to_setup << arg
+      end
+    end
   end
 
 
   def plugin_directives(*args)
     if args
-       args.each do |arg|
-         $plugin_directives << arg
-       end
-     end
+      args.each do |arg|
+        $plugin_directives << arg
+      end
+    end
   end
 
 
   def external_variables(*args)
     if args
-       args.each do |arg|
-         puts self.class
-         puts "\tadding plugin external variables: #{arg}"
-         # colons aptional
-         colon  = arg[arg.length - 1, 1] == ";"  ? '' : ';' 
-         $plugin_external_variables << "#{arg}#{colon}"
-       end
-     end
+      args.each do |arg|
+        puts self.class
+        puts "\tadding plugin external variables: #{arg}"
+        # colons aptional
+        colon  = arg[arg.length - 1, 1] == ";"  ? '' : ';'
+        $plugin_external_variables << "#{arg}#{colon}"
+      end
+    end
   end
   
   def add_blink_m_struct
@@ -212,9 +211,9 @@ end
     $plugin_methods_hash.each do |k,meths|
       meths.each do |meth|
         if sketch_string.include?(meth)
-           # load this plugin... 
-           $plugins_to_load << k unless $plugins_to_load.include?(k)
-         end
+          # load this plugin...
+          $plugins_to_load << k unless $plugins_to_load.include?(k)
+        end
       end
     end
 
