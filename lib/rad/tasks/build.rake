@@ -7,7 +7,7 @@ namespace :build do
     # until we better understand RubyToC let's see what's happening on errors
     @sketch.sketch_methods.each do |meth|
       # use the shiny new RubyToC  version
-      raw_rtc_meth = RadProcessor.translate(@sketch.path, @sketch.klass.intern, meth.intern)
+      raw_rtc_meth = Rad::Ruby2c::Processor.translate(@sketch.path, @sketch.klass.intern, meth.intern)
       puts "Translator Error: #{raw_rtc_meth.inspect}" if raw_rtc_meth =~ /\/\/ ERROR:/
       c_methods << raw_rtc_meth unless meth == "setup"
       # treat the setup method differently
@@ -17,7 +17,7 @@ namespace :build do
     c_methods.each {|meth| sketch_signatures << "#{meth.scan(/^\w*\s?\*?\n.*\)/)[0].gsub("\n", " ")};" }
     clean_c_methods = []
     # remove external variables that were previously injected
-    c_methods.join("\n").each { |meth| clean_c_methods << ArduinoSketch.post_process_ruby_to_c_methods(meth) }
+    c_methods.each { |meth| clean_c_methods << ArduinoSketch.post_process_ruby_to_c_methods(meth) }
     c_methods_with_timer = clean_c_methods.join.gsub(/loop\(\)\s\{/,"loop() {")
     # last chance to add/change setup
     @setup[2] << sketch_signatures.join("\n") unless sketch_signatures.empty?
@@ -34,9 +34,9 @@ namespace :build do
   # needs to write the library include and the method signatures
   desc "build setup function"
   task :setup do
-    eval "class #{@sketch.klass} < ArduinoSketch; end;"
+    Kernel.const_set @sketch.klass, Class.new(ArduinoSketch)
 
-    @@as = HardwareLibrary.new
+    @@as = Rad::ArduinoSketch::HardwareLibrary.new
 
     delegate_methods = @@as.methods - Object.new.methods
     delegate_methods.reject!{|m| m == "compose_setup"}
@@ -84,7 +84,6 @@ namespace :build do
          CODE
        end
 
-      puts name
       ArduinoPlugin.process(File.read(RAD_LIB.join('plugins', (name + '.rb'))))
 
     end
@@ -96,7 +95,7 @@ namespace :build do
     @plugin_names.each do |name|
       ArduinoPlugin.check_for_plugin_use(@sketch.body, File.read(name), name.basename('.rb').to_s )
     end
-    puts "#{$plugins_to_load.length} of #{$plugin_methods_hash.length} plugins are being loaded:  #{$plugins_to_load.join(", ")}"
+    puts "#{$plugins_to_load.length} of #{$plugin_methods_hash.length} plugins is/are being loaded:  #{$plugins_to_load.join(", ")}"
   end
 
   desc "setup target directory named after your sketch class"
