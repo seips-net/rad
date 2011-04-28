@@ -24,7 +24,6 @@
 
 = Old todos
 * complete library system: script/install library some_library
-* setup and use a ~/.rad for new project defaults
 * project gallery (examples with movies)
 * testing framework
 * implement wire lib
