@@ -200,9 +200,7 @@ class Rad::ArduinoSketch
 
     super
   end
-  
-
-  
+    
   # array "char buffer[32]"
   # result: char buffer[32];
   # array "char buffer[32]"
@@ -277,7 +275,6 @@ class Rad::ArduinoSketch
   #     digital_write led, ON
   #   end
   #
-
   def output_pin(num, opts={})
     raise ArgumentError, "can only define pin from Fixnum, got #{num.class}" unless num.is_a?(Fixnum)
     @pin_modes[:output] << num
@@ -414,7 +411,7 @@ class Rad::ArduinoSketch
 
   
 
-
+# #todo clean this up
   def compose_setup #:nodoc: also composes headers and signatures
 
     declarations = []

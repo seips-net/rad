@@ -42,7 +42,7 @@
 
 
 
-class ArduinoPlugin
+class Rad::ArduinoPlugin
   
 def initialize #:nodoc:
   

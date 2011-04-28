@@ -1,6 +1,6 @@
 # alias to for backwards/lazy loading compatibility
 
-class ArduinoSketch < Rad::ArduinoSketch
+class ArduinoPlugin < Rad::ArduinoPlugin
 
 end
 
