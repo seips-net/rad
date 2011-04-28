@@ -155,21 +155,28 @@
 class Rad::ArduinoSketch
   
   include ExternalVariableProcessing
+
+  # include devices #todo do autoinclude for all Modules
+  include Rad::ArduinoSketch::Base
+  include Rad::ArduinoSketch::Debounce
+  include Rad::ArduinoSketch::Ethernet
+  include Rad::ArduinoSketch::FrequencyGenerator
+  include Rad::ArduinoSketch::Hysteresis
+  include Rad::ArduinoSketch::I2c
+  include Rad::ArduinoSketch::I2cBlinkm
+  include Rad::ArduinoSketch::I2cDs1307
+  include Rad::ArduinoSketch::I2cEeprom
+  include Rad::ArduinoSketch::Onewire
+  include Rad::ArduinoSketch::PaLcd
+  include Rad::ArduinoSketch::Servo
+  include Rad::ArduinoSketch::SfLcd
+  include Rad::ArduinoSketch::Spectra
   
   # find another way to do this
   @@twowire_inc	  = FALSE
   @@hwserial_inc  = FALSE
-
   
   def initialize #:nodoc:
-    @servo_settings = [] # need modular way to add this
-    @debounce_settings = [] # need modular way to add this
-    @hysteresis_settings = []
-    @spectra_settings = []
-    @servo_pins = [] 
-    @debounce_pins = []
-    @hysteresis_pins = []
-    @spectra_pins = []
     $external_array_vars = [] 
     $external_vars =[]
     $external_var_identifiers = []
@@ -191,6 +198,7 @@ class Rad::ArduinoSketch
     helper_methods = []
     @helper_methods = helper_methods.join( "\n" )
 
+    super
   end
   
 
@@ -269,51 +277,25 @@ class Rad::ArduinoSketch
   #     digital_write led, ON
   #   end
   #
+
   def output_pin(num, opts={})
     raise ArgumentError, "can only define pin from Fixnum, got #{num.class}" unless num.is_a?(Fixnum)
     @pin_modes[:output] << num
+
     if opts[:as]
+
       if opts[:device]
-        case opts[:device]
-        when :servo
-          servo_setup(num, opts)
-          return # don't use declarations, accessor, signatures below
-        when :pa_lcd || :pa_LCD
-          pa_lcd_setup(num, opts)
-          return 
-        when :sf_lcd || :sf_LCD
-          sf_lcd_setup(num, opts)
-          return         
-        when :freq_out || :freq_gen || :frequency_generator
-          frequency_timer(num, opts)
-          return
-        when :i2c
-          two_wire(num, opts) unless @@twowire_inc
-          return #
-        when :i2c_eeprom
-          two_wire(num, opts) unless @@twowire_inc
-          i2c_eeprom(num, opts)
-          return #
-        when :i2c_ds1307
-          two_wire(num, opts) unless @@twowire_inc
-          ds1307(num, opts) 
-          return #
-        when :i2c_blinkm
-          two_wire(num, opts) unless @@twowire_inc
-          blinkm
-          return #
-        when :onewire
-          one_wire(num, opts)
-          return #
-        when :ethernet
-          ethernet(num, opts)
-          return #
-        else
-          raise ArgumentError, "today's device choices are: :servo, :pa_lcd, :sf_lcd, :freq_out,:i2c, :i2c_eeprom, :i2c_ds1307, and :i2c_blinkm  got #{opts[:device]}"
+        device_outdated? opts[:device]
+
+        f = "output_pin_#{opts[:device]}"
+        if respond_to? f
+          send(f, num, opts)
         end
       end
       
-  # add state variables for outputs with :state => :on or :off -- useful for toggling a light with output_toggle -- need to make this more modular
+  # add state variables for outputs with :state => :on or :off
+  # useful for toggling a light with output_toggle
+  # #todo make this more modular
       if opts[:state] 
         # add debounce settings to dbce struct array
         ArduinoPlugin.add_debounce_struct
@@ -613,16 +595,17 @@ class Rad::ArduinoSketch
       end
       return clean_c_methods.join( "\n" )
   end
-  
 
-  def comment_box( content ) #:nodoc:
-    out = []
-    out << "/" * 74
-    out << "// " + content
-    out << "/" * 74
-    
-    return out.join( "\n" )
-  end  
-
+  # Check for depricated devices
+  def device_outdated?(device)
+    case device
+    when :pa_LCD then
+      raise ArgumentError, ":device => #{device} is outdated. use :pa_lcd instead."
+    when :sf_LCD then
+      raise ArgumentError, ":device => #{device} is outdated. use :sf_lcd instead."
+    when :freq_out || :freq_gen then
+      raise ArgumentError, ":device => #{device} is outdated. use :frequency_generator instead."
+    end
+  end
   
 end
