@@ -157,8 +157,9 @@ class Rad::ArduinoSketch
 
   RAD_LIB.join('rad','arduino_sketch').children.each do |c|
     s = c.basename('.rb').to_s
-    m = s.camelize.constantize
-    inclube m unless s == 'hardware_library'
+    next if s == 'hardware_library' # workaround #todo move hardware library to another directory
+    m = ('Rad::ArduinoSketch::' + s.camelize).constantize
+    include m
   end
   
   # find another way to do this
@@ -537,7 +538,7 @@ class Rad::ArduinoSketch
     @assembler_declarations << signature
     assembler_code = <<-CODE
       .file "#{name}.S"
-      .arch #{Makefile.hardware_params['mcu']}
+      .arch #{Rad::Makefile.hardware_params['mcu']}
       .global __do_copy_data
       .global __do_clear_bss
       .text
