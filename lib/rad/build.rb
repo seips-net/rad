@@ -5,11 +5,10 @@ class Rad::Build
   class << self
     attr_accessor :sketch_name, :options
   end
-  def self.run
+  def self.run(sketch_name, options)
 
-    @options, parser = OptionParser.parse(ARGV)
-    @sketch_name = ARGV[0]
-    parser.parse!(["-h"]) unless @sketch_name
+    @sketch_name = sketch_name
+    @options = options
 
     libraries
     examples

@@ -18,7 +18,10 @@ class Rad
     elsif ARGV[0] == "test"
       Rad::Test.run
     elsif ARGV[0] == "create"
-      Rad::Build.run
+      options, parser = OptionParser.parse(ARGV)
+      sketch_name = ARGV[1]
+      parser.parse!(["-h"]) unless sketch_name
+      Rad::Build.run sketch_name, options
     end
   end
 end
