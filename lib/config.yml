@@ -2,9 +2,16 @@ arduino:
   version: arduino-0022
   download_file:
     linux: http://arduino.googlecode.com/files/arduino-0022.tgz
+    linux64: http://arduino.googlecode.com/files/arduino-0022-64-2.tgz
     mac: http://arduino.googlecode.com/files/arduino-0022.dmg
     windows: http://arduino.googlecode.com/files/arduino-0022.zip
+  sha1:
+    linux: 8f2f5816edf667d29f3cb2919b8ff6287aab0a3e
+    linux64: 9e9a35910ddf11a247dce7bee94e5ad58a189760
+    mac: 7abb5d7959d4ad73450ab6519b8837dac577dd38
+    windows: 	a3ec14e314fd13d0a4ba7689f28ad6534c46df84
   application_dir:
     linux: /opt
+    linux64: /opt
     mac: /Application
     windows: C:\opt
