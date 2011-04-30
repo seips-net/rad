@@ -4,9 +4,8 @@ namespace :build do
   task :sketch => [:file_list, :sketch_dir, :gather_required_plugins, :plugin_setup, :setup] do
     c_methods = []
     sketch_signatures = []
-    # until we better understand RubyToC let's see what's happening on errors
+    
     @sketch.sketch_methods.each do |meth|
-      # use the shiny new RubyToC  version
       raw_rtc_meth = Rad::Ruby2c::Processor.translate(@sketch.path, @sketch.klass.intern, meth.intern)
       puts "Translator Error: #{raw_rtc_meth.inspect}" if raw_rtc_meth =~ /\/\/ ERROR:/
       c_methods << raw_rtc_meth unless meth == "setup"
@@ -66,11 +65,9 @@ namespace :build do
 
   desc "add plugin methods"
   task :plugin_setup do
-    $plugins_to_load.each do |name|
-       klass = name.camelize
-       puts klass
-
-       eval "class #{klass} < ArduinoPlugin; end;"
+    $plugins_to_load.each do |plugin|
+       klass = plugin.camelize
+       Kernel.const_set klass, Class.new(ArduinoPlugin)
 
        @@ps = ArduinoPlugin.new
        plugin_delegate_methods = @@ps.methods - Object.new.methods
@@ -84,7 +81,7 @@ namespace :build do
          CODE
        end
 
-      ArduinoPlugin.process(File.read(RAD_LIB.join('plugins', (name + '.rb'))))
+      ArduinoPlugin.process( RAD_LIB.join( 'plugins', (plugin + '.rb') ).read )
 
     end
     @@no_plugins = ArduinoPlugin.new if @plugin_names.empty?
@@ -93,7 +90,7 @@ namespace :build do
   desc "determine which plugins to load based on use of methods in sketch"
   task :gather_required_plugins do
     @plugin_names.each do |name|
-      ArduinoPlugin.check_for_plugin_use(@sketch.body, File.read(name), name.basename('.rb').to_s )
+      ArduinoPlugin.check_for_plugin_use(@sketch.body, name.read, name.basename('.rb').to_s )
     end
     puts "#{$plugins_to_load.length} of #{$plugin_methods_hash.length} plugins is/are being loaded:  #{$plugins_to_load.join(", ")}"
   end
