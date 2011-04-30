@@ -12,16 +12,12 @@
 class Rad::SketchCompiler
   attr_accessor :path, :body, :klass, :target_dir, :name
   
-  def initialize path_to_sketch 
-    @path = File.expand_path(path_to_sketch)
+  def initialize sketch_file
+    @path = sketch_file.expand_path
     @body = open(@path).read
-    @name = @path.split("/").last.split(".").first
-    @klass = @name.split(".").first.split("_").collect{|c| c.capitalize}.join("")     
-    @target_dir = parent_dir
-  end
-  
-  def parent_dir
-    self.path.split("/")[0..@path.split("/").length-2].join("/")
+    @name = @path.basename('.rb')
+    @klass = @name.camelize
+    @target_dir = @path.dirname
   end
   
   def build_dir
@@ -30,7 +26,7 @@ class Rad::SketchCompiler
 
   def create_build_dir! optional_path_prefix=nil
     self.target_dir = optional_path_prefix if optional_path_prefix
-    mkdir_p build_dir
+    FileUtils.mkdir_p build_dir
   end
   
   def process_constants
