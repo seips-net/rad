@@ -19,7 +19,7 @@ class Rad::Installer::Base
 
 # #todo detect file extension and use correct extract function
 #  def self.extract(from_file, to_dir)
-#    
+#
 #  end
 
   # bug in rubyzip hope to be fixed in 0.9.5

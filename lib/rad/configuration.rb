@@ -12,6 +12,7 @@ class Rad::Configuration
     $config = YAML.load_file(RAD_LIB.join('config.yml'))
   end
 
+  # #todo detect linux 64bit as well and return linux64
   def self.detect_os
     os = ''
     case RUBY_PLATFORM

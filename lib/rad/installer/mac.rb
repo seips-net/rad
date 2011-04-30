@@ -1,8 +1,9 @@
 class Rad::Installer::Mac < Rad::Installer::Base
 
   def self.run
-    arduino_url = 'http://arduino.googlecode.com/files/arduino-0022.dmg'
-    opt_dir = Pathname.new '/Applications'
+    arduino_url = config['download_file']
+    sha1 = config['sha1']
+    opt_dir = Pathname.new config['application_dir']
     arduino_file = opt_dir + arduino_url.split('/').last
 
     download arduino_url, arduino_file
