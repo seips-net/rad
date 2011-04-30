@@ -16,7 +16,7 @@ class Rad::SketchCompiler
     @path = sketch_file.expand_path
     @body = open(@path).read
     @name = @path.basename('.rb')
-    @klass = @name.camelize
+    @klass = @name.to_s.camelize
     @target_dir = @path.dirname
   end
   
