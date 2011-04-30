@@ -1,3 +1,4 @@
+version: arduino-0022
 installer:
   linux:
     download_file: http://arduino.googlecode.com/files/arduino-0022.tgz

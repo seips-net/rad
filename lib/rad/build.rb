@@ -5,8 +5,8 @@ class Rad::Build
   class << self
     attr_accessor :sketch_name, :options
   end
-  def self.run(sketch_name, options)
 
+  def self.run(sketch_name, options)
     @sketch_name = sketch_name
     @options = options
 
@@ -22,8 +22,8 @@ class Rad::Build
   
   def self.libraries
     FileUtils.mkdir_p "#{@sketch_name}/vendor/libraries"
-    application_dir = Pathname.new($config['arduino']['application_dir'][$config['os']])
-    src = application_dir.join($config['arduino']['version'],'libraries')
+    application_dir = Pathname.new( $config['installer'][$config['os']]['application_dir'] )
+    src = application_dir.join($config['version'],'libraries')
     dest = "#{@sketch_name}/vendor"
     FileUtils.cp_r src, dest
   end
