@@ -7,10 +7,8 @@
 #   manage upload process
 #   compose_setup should move in here entirely
 
-# require 'arduino_sketch'
-
 class Rad::SketchCompiler
-  attr_accessor :path, :body, :klass, :target_dir, :name
+  attr_accessor :path, :body, :klass, :target_dir, :name, :build_dir
   
   def initialize sketch_file
     @path = sketch_file.expand_path
@@ -18,15 +16,12 @@ class Rad::SketchCompiler
     @name = @path.basename('.rb')
     @klass = @name.to_s.camelize
     @target_dir = @path.dirname
-  end
-  
-  def build_dir
-    "#{self.target_dir}/#{self.name}"
+    @build_dir = @path + @name
   end
 
   def create_build_dir! optional_path_prefix=nil
     self.target_dir = optional_path_prefix if optional_path_prefix
-    FileUtils.mkdir_p build_dir
+    FileUtils.mkdir_p @build_dir
   end
   
   def process_constants
