@@ -16,7 +16,7 @@ class Rad::SketchCompiler
     @name = @path.basename('.rb')
     @klass = @name.to_s.camelize
     @target_dir = @path.dirname
-    @build_dir = @path + @name
+    @build_dir = @target_dir + @name
   end
 
   def create_build_dir! optional_path_prefix=nil
