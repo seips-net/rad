@@ -3,21 +3,26 @@ namespace :build do
   desc "actually build the sketch"
   task :sketch => [:file_list, :sketch_dir, :gather_required_plugins, :plugin_setup, :setup] do
     c_methods = []
-    sketch_signatures = []
     
     @sketch.sketch_methods.each do |meth|
       raw_rtc_meth = Rad::Ruby2c::Processor.translate(@sketch.path, @sketch.klass.intern, meth.intern)
       puts "Translator Error: #{raw_rtc_meth.inspect}" if raw_rtc_meth =~ /\/\/ ERROR:/
-      c_methods << raw_rtc_meth unless meth == "setup"
-      # treat the setup method differently
-      @additional_setup = [] if meth == "setup"
-      raw_rtc_meth.each {|m| @additional_setup << ArduinoSketch.add_to_setup(m) } if meth == "setup"
+
+      unless meth == 'setup' then
+        c_methods << raw_rtc_meth
+      else
+        @additional_setup = []
+        raw_rtc_meth.each {|m| @additional_setup << ArduinoSketch.add_to_setup(m) }
+      end    
     end
-    c_methods.each {|meth| sketch_signatures << "#{meth.scan(/^\w*\s?\*?\n.*\)/)[0].gsub("\n", " ")};" }
-    clean_c_methods = []
+    
+    sketch_signatures = c_methods.map { |m| "#{m.scan(/^\w*\s?\*?\n.*\)/)[0].gsub("\n", " ")};" }
+    
     # remove external variables that were previously injected
-    c_methods.each { |meth| clean_c_methods << ArduinoSketch.post_process_ruby_to_c_methods(meth) }
+    clean_c_methods = c_methods.map { |m| ArduinoSketch.post_process_ruby_to_c_methods(m) }
+    
     c_methods_with_timer = clean_c_methods.join.gsub(/loop\(\)\s\{/,"loop() {")
+    
     # last chance to add/change setup
     @setup[2] << sketch_signatures.join("\n") unless sketch_signatures.empty?
     # add special setup method to existing setup if present
