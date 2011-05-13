@@ -1,10 +1,15 @@
 module Rad::ArduinoSketch::Base
 
-  def comment_box( content ) #:nodoc:
+  # Add a comment box like this:
+  # ///////////////...///////////////
+  # // My Comment                  //
+  # ///////////////...///////////////
+
+  def comment_box( content )
     out = []
-    out << "/" * 74
-    out << "// " + content
-    out << "/" * 74
+    out << "/" * 80
+    out << "// " + content.ljust(74, ' ') + " //"
+    out << "/" * 80
     
     return out.join( "\n" )
   end
