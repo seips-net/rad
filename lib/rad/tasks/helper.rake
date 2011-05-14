@@ -1,6 +1,6 @@
 require 'ruby_to_ansi_c'
 
-C_VAR_TYPES = "unsigned|int|long|double|str|char|byte|bool"
+C_VAR_TYPES = %w{ unsigned int long double str char byte bool }
 
 # incredibly primitive tests 
 # rake test:compile or rake test:upload

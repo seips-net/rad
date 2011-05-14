@@ -127,8 +127,8 @@ module Rad::ExternalVariableProcessing
     end
     
     def check_variable_type(type)
-      unless type =~ /#{C_VAR_TYPES}/
-        raise ArgumentError, "the following variable types are supported \n #{C_VAR_TYPES.gsub("|",", ")} got #{type}" 
+      unless type =~ /#{C_VAR_TYPES.join('|')}/
+        raise ArgumentError, "the following variable types are supported \n #{C_VAR_TYPES.join(", ")} got #{type}" 
       end
     end
     

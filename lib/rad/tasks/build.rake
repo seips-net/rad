@@ -3,6 +3,7 @@ namespace :build do
   desc "actually build the sketch"
   task :sketch => [:file_list, :sketch_dir, :gather_required_plugins, :plugin_setup, :setup] do
     c_methods = []
+    additional_setup = []
     
     @sketch.sketch_methods.each do |meth|
       raw_rtc_meth = Rad::Ruby2c::Processor.translate(@sketch.path, @sketch.klass.intern, meth.intern)
@@ -11,12 +12,11 @@ namespace :build do
       unless meth == 'setup' then
         c_methods << raw_rtc_meth
       else
-        @additional_setup = []
-        raw_rtc_meth.each {|m| @additional_setup << ArduinoSketch.add_to_setup(m) }
+        raw_rtc_meth.each {|m| additional_setup << ArduinoSketch.add_to_setup(m) }
       end    
     end
     
-    sketch_signatures = c_methods.map { |m| "#{m.scan(/^\w*\s?\*?\n.*\)/)[0].gsub("\n", " ")};" }
+    sketch_signatures = c_methods.map { |m| m.scan(/^\w*\s?\*?\n.*\)/).first.gsub("\n", " ") + ";" }
     
     # remove external variables that were previously injected
     clean_c_methods = c_methods.map { |m| ArduinoSketch.post_process_ruby_to_c_methods(m) }
@@ -26,11 +26,13 @@ namespace :build do
     # last chance to add/change setup
     @setup[2] << sketch_signatures.join("\n") unless sketch_signatures.empty?
     # add special setup method to existing setup if present
-    if @additional_setup
+    if additional_setup
       @setup[2] << "void additional_setup();" # declaration
       @setup[4] << "\tadditional_setup();" # call from setup
-      @setup[5] << @additional_setup.join("") #
+      @setup[5] << additional_setup.join("") #
     end
+    puts @setup.to_yaml
+    
     result = "#{@setup.join( "\n" )}\n#{c_methods_with_timer}\n"
     File.open("#{@sketch.build_dir}/#{@sketch.name}.cpp", "w"){|f| f << result}
   end
@@ -46,12 +48,13 @@ namespace :build do
     delegate_methods.reject!{|m| m == "compose_setup"}
 
     delegate_methods.each do |meth|
-       constantize(@sketch.klass).module_eval <<-CODE
+       ActiveSupport::Inflector.constantize(@sketch.klass).module_eval <<-CODE
        def self.#{meth}(*args)
        @@as.#{meth}(*args)
        end
        CODE
     end
+    
     # allow variable declaration without quotes: @foo = int
     ["long","unsigned","int","byte","short"].each do |type|
       constantize(@sketch.klass).module_eval <<-CODE
