@@ -31,7 +31,6 @@ namespace :build do
       @setup[4] << "\tadditional_setup();" # call from setup
       @setup[5] << additional_setup.join("") #
     end
-    puts @setup.to_yaml
     
     result = "#{@setup.join( "\n" )}\n#{c_methods_with_timer}\n"
     File.open("#{@sketch.build_dir}/#{@sketch.name}.cpp", "w"){|f| f << result}
