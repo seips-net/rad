@@ -427,12 +427,12 @@ class Rad::ArduinoSketch
     signatures << "void loop();"
     signatures << "void setup();"
     
-    signatures << "// sketch signatures"
+    signatures << '// sketch signatures'
     @signatures.each {|sig| signatures << sig}
     
-    signatures << "// plugin signatures"
+    signatures << '// plugin signatures'
     $plugin_signatures.each {|sig| signatures << sig } unless $plugin_signatures.nil? || $plugin_signatures.empty?
-    
+
     signatures << comment_box( 'plugin structs' )
     $plugin_structs.each { |k,v| signatures << v } unless $plugin_structs.nil? || $plugin_structs.empty?
     

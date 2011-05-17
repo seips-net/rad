@@ -223,24 +223,19 @@ class Rad::ArduinoPlugin
 
 
   def self.process(plugin_string)
-    plugin_signatures = []
-    first_process = plugin_string 
     # todo: need to add plugin names to the methods, so we can add them as comments in the c code
     # gather the c methods
-    $plugin_methods << first_process.scan(/^\s*(((#{PLUGIN_C_VAR_TYPES}).*\)).*(\n.*)*^\s*\})/)
-    plugin_signatures << first_process.scan(/^\s((#{PLUGIN_C_VAR_TYPES}).*\(.*\))/)
-    $plugin_signatures << plugin_signatures[0].map {|sig| "#{sig[0]};"}
+    
+    # plugin_methods
+    $plugin_methods << plugin_string.scan(/^\s*(((#{PLUGIN_C_VAR_TYPES}).*\)).*(\n.*)*^\s*\})/)
+    
+    # plugin signatures
+    $plugin_signatures << plugin_string.scan(/(?:#{PLUGIN_C_VAR_TYPES.join('|')})\s+.+\s*\(.*\)/).map {|s| s + ';'}
+    $plugin_signatures.flatten!
+    
     ## strip out the methods and pass it back 
-    result = plugin_string
     # strip out the c methods so we have only ruby before eval
-    result.gsub(/^\s*(#{PLUGIN_C_VAR_TYPES}).*(\n.*)*^\s*\}/, ""  )
-    
-  end
-  
-  private
-  
-  def add_struct(struct)
-    
+    plugin_string.gsub(/^\s*(#{PLUGIN_C_VAR_TYPES.join('|')}).*(\n.*)*^\s*\}/, "")
     
   end
     
