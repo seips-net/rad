@@ -545,7 +545,7 @@ CODE
     #{code}
     CODE
             
-    File.open(File.expand_path("#{RAD_ROOT}") + "/#{PROJECT_DIR_NAME}/#{name}.S", "w"){|f| f << assembler_code}
+    File.open(File.expand_path("#{RAD_ROOT}") + "/#{PROJECT_ROOT}/#{name}.S", "w"){|f| f << assembler_code}
   end
   
   def self.pre_process(sketch_string) #:nodoc:

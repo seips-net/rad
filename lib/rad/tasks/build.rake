@@ -116,7 +116,10 @@ namespace :build do
     raise 'Directory is not containing a .rb sketch file with name of the directory.' unless sketch_file.file?
 
     @sketch = Rad::SketchCompiler.new sketch_file
-    
+    sw_config = Rad::Makefile.software_params
+    arduino_root = Pathname.new sw_config['arduino_root']
+    # #todo fix for none windows os
+    @make = arduino_root.join('hardware', 'tools', 'avr', 'utils', 'bin', 'make.exe')
     @plugin_names = []
 
     RAD_LIB.join('plugins').children.each do |child|

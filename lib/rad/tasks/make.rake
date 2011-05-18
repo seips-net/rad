@@ -6,7 +6,7 @@ namespace :make do
       puts "Reset the Arduino and hit enter.\n==If your board doesn't need it, you can turn off this prompt in config/software.yml=="
       STDIN.gets.chomp
     end
-    sh %{cd #{@sketch.build_dir}; make upload}
+    sh %{cd #{@sketch.build_dir}; #{@make} upload}
   end
 
   desc "generate a makefile and use it to compile the .cpp"
@@ -14,26 +14,26 @@ namespace :make do
     Rad::Makefile.compose_for_sketch( @sketch.build_dir )
 
     # not allowed? sh %{export PATH=#{Rad::Makefile.software_params[:arduino_root]}/tools/avr/bin:$PATH}
-    sh %{cd #{@sketch.build_dir}; make depend; make}
+    sh %{cd #{@sketch.build_dir}; #{@make} depend; #{@make}}
   end
 
   desc "generate a makefile and use it to compile the .cpp using the current .cpp file"
   task :compile_cpp => ["build:sketch_dir", "build:gather_required_plugins", "build:plugin_setup", "build:setup", :clean_sketch_dir] do # should also depend on "build:sketch"
     Rad::Makefile.compose_for_sketch( @sketch.build_dir )
     # not allowed? sh %{export PATH=#{Rad::Makefile.software_params[:arduino_root]}/tools/avr/bin:$PATH}
-    sh %{cd #{@sketch.build_dir}; make depend; make}
+    sh %{cd #{@sketch.build_dir}; #{@make} depend; #{@make}}
   end
 
   desc "generate a makefile and use it to compile the .cpp and upload it using current .cpp file"
   task :upload_cpp => ["build:sketch_dir", "build:gather_required_plugins", "build:plugin_setup", "build:setup", :clean_sketch_dir] do # should also depend on "build:sketch"
     Rad::Makefile.compose_for_sketch( @sketch.build_dir )
     # not allowed? sh %{export PATH=#{Rad::Makefile.software_params[:arduino_root]}/tools/avr/bin:$PATH}
-    sh %{cd #{@sketch.build_dir}; make depend; make upload}
+    sh %{cd #{@sketch.build_dir}; #{@make} depend; #{@make} upload}
   end
 
   task :clean_sketch_dir => ["build:file_list", "build:sketch_dir"] do
-    FileList.new(Dir.entries("#{@sketch.build_dir}")).exclude("#{@sketch.name}.cpp").exclude(/^\./).each do |f|
-      sh %{rm #{@sketch.build_dir}/#{f}}
+    @sketch.build_dir.children.each do |c|
+      c.delete unless c.basename == @sketch.name.to_s + '.cpp'
     end
   end
 
