@@ -227,7 +227,7 @@ class Rad::ArduinoPlugin
     # gather the c methods
     
     # plugin_methods
-    $plugin_methods << plugin_string.scan(/^\s*(((#{PLUGIN_C_VAR_TYPES}).*\)).*(\n.*)*^\s*\})/)
+    $plugin_methods << plugin_string.scan(/(?:#{PLUGIN_C_VAR_TYPES.join('|')})[^{]*\{[^}]*\}/)
     
     # plugin signatures
     $plugin_signatures << plugin_string.scan(/(?:#{PLUGIN_C_VAR_TYPES.join('|')})\s+.+\s*\(.*\)/).map {|s| s + ';'}
