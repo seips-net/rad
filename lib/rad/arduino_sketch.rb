@@ -507,7 +507,7 @@ class Rad::ArduinoSketch
     
     helpers << comment_box( 'plugin methods' )  
     # need to add plugin name to this... 
-    $plugin_methods.flatten.each { |meth| helpers << "#{meth}\n" } unless $plugin_methods.nil? || $plugin_methods.empty?
+    $plugin_methods.each { |meth| helpers << "#{meth}\n" } unless $plugin_methods.nil? || $plugin_methods.empty?
     
     if @@hwserial_inc == TRUE
       helpers << "// serial helpers"

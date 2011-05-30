@@ -228,6 +228,7 @@ class Rad::ArduinoPlugin
     
     # plugin_methods
     $plugin_methods << plugin_string.scan(/(?:#{PLUGIN_C_VAR_TYPES.join('|')})[^{]*\{[^}]*\}/)
+    $plugin_methods.flatten!
     
     # plugin signatures
     $plugin_signatures << plugin_string.scan(/(?:#{PLUGIN_C_VAR_TYPES.join('|')})\s+.+\s*\(.*\)/).map {|s| s + ';'}
