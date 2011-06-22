@@ -186,7 +186,7 @@ class Rad::ArduinoSketch
     @signatures = ["int main();"]
  
     helper_methods = []
-    @helper_methods = helper_methods.join( "\n" )
+    @helper_methods = helper_methods
 
     super
   end
@@ -199,9 +199,9 @@ class Rad::ArduinoSketch
   # need to feed array external array identifiers to rtc if they are in plugins or libraries, (not so sure about this will do more testing)
   def array(arg)
     if arg
-        arg = arg.chomp.rstrip.lstrip
+        arg.strip!
         arg.sub!("@","__")
-        name = arg.scan(/\s*(\w*)\[\d*\]?/).first.first
+        name = arg.scan(/\s*(\w*)\[\d*\]?/).first.first #todo clean up .first.first
         # help rad_processor do a better job with array types
         types = ["int", "long", "char*", "unsigned int", "unsigned long", "byte", "bool", "float" ]
         types.each_with_index do |type, i|
@@ -226,7 +226,7 @@ class Rad::ArduinoSketch
   # need more testing
   def define(arg)
     if arg
-        arg = arg.strip
+        arg.strip!
         name = arg.split(" ").first
         value = arg.gsub!("#{name} ","")
         # #todo combine positive and negative long/float
@@ -363,8 +363,8 @@ class Rad::ArduinoSketch
     ar.each {|n| input_pin(n)} 
   end
   
-  def add(st) #:nodoc:
-    @helper_methods << "\n#{st}\n"
+  def add(string) #:nodoc:
+    @helper_methods << string
   end
   
   # Configure Arduino for serial communication. Optionally, set the baud rate:
@@ -503,7 +503,7 @@ class Rad::ArduinoSketch
     
     helpers << comment_box( 'helper methods' )
     helpers << '// RAD built-in helpers'
-    helpers << @helper_methods.lstrip
+    helpers << @helper_methods.flatten.join("\n")
     
     helpers << comment_box( 'plugin methods' )  
     # need to add plugin name to this... 
@@ -531,7 +531,13 @@ CODE
   end
   
   
-  # Write inline assembler code. 'Name' is a symbol representing the name of the function to be defined in the assembly code; 'signature' is the function signature for the function being defined; and 'code' is the assembly code itself (both of these last two arguments are strings). See an example here: http://rad.rubyforge.org/examples/assembler_test.html
+  # Write inline assembler code.
+  # 'Name' is a symbol representing the name of the function to be defined in the assembly code;
+  # 'signature' is the function signature for the function being defined;
+  # 'code' is the assembly code itself (both of these last two arguments are strings).
+  # See an example here: http://rad.rubyforge.org/examples/assembler_test.html
+  # URL not working: try http://rad.rubyforge.org/examples/assembler_test.rb.html with bad style
+  
   def assembler(name, signature, code)
     @assembler_declarations << signature
     assembler_code = <<-CODE

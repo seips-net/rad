@@ -329,8 +329,8 @@ class Rad::ArduinoSketch::HardwareLibrary < ArduinoSketch
   # use the servo library
   def servo_setup(num, opts)
     if opts[:position]
-      raise ArgumentError, "position must be an integer from 0 to 360, got #{opts[:position].class}" unless opts[:position].is_a?(Fixnum)
-      raise ArgumentError, "position must be an integer from 0 to 360---, got #{opts[:position]}" if opts[:position] < 0 || opts[:position] > 360
+      raise ArgumentError, "position must be a Fixnum, got #{opts[:position].class}" unless opts[:position].is_a?(Fixnum)
+      raise ArgumentError, "position must be in range from 0 to 360, got #{opts[:position]}" if opts[:position] < 0 || opts[:position] > 360
     end
     servo(num, opts)
     # move this to better place ... 
@@ -342,9 +342,9 @@ class Rad::ArduinoSketch::HardwareLibrary < ArduinoSketch
       helper_methods = []
       helper_methods << "void servo_refresh(void)"
       helper_methods << "{"
-      helper_methods <<  "\tServo::refresh();"
+      helper_methods << "\tServo::refresh();"
       helper_methods << "}"
-      @helper_methods += "\n#{helper_methods.join("\n")}"
+      @helper_methods << helper_methods.join("\n")
     end
   end
   
