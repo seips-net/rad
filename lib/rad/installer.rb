@@ -1,19 +1,16 @@
 class Rad::Installer
   def self.run
 
-    case RUBY_PLATFORM
-    when /linux/ # Linux
+    case $config['os']
+    when 'linux'
       Rad::Installer::Linux.run
-
-    when /darwin/ # MacOS
+    when 'mac'
       Rad::Installer::Mac.run
-
-    when /mingw32/ # Windows
+    when 'windows'
       Rad::Installer::Windows.run
-
     else
-      raise "Sorry. Your operation system was not detected as one of the supported systems."
+      exit
     end
-
+    
   end
 end
