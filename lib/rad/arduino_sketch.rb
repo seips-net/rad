@@ -530,30 +530,6 @@ CODE
 
   end
   
-  
-  # Write inline assembler code.
-  # 'Name' is a symbol representing the name of the function to be defined in the assembly code;
-  # 'signature' is the function signature for the function being defined;
-  # 'code' is the assembly code itself (both of these last two arguments are strings).
-  # See an example here: http://rad.rubyforge.org/examples/assembler_test.html
-  # URL not working: try http://rad.rubyforge.org/examples/assembler_test.rb.html with bad style
-  
-  def assembler(name, signature, code)
-    @assembler_declarations << signature
-    assembler_code = <<-CODE
-      .file "#{name}.S"
-      .arch #{Rad::Makefile.hardware_params['mcu']}
-      .global __do_copy_data
-      .global __do_clear_bss
-      .text
-    .global #{name}
-      .type #{name}, @function
-    #{code}
-    CODE
-            
-    File.open(File.expand_path("#{RAD_ROOT}") + "/#{PROJECT_ROOT}/#{name}.S", "w"){|f| f << assembler_code}
-  end
-  
   def self.pre_process(sketch_string) #:nodoc:
     result = sketch_string 
     # add external vars to each method (needed for better translation, will be removed in make:upload)
