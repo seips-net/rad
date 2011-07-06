@@ -5,7 +5,12 @@ require 'readline'
 class Rad
   def self.run
     config
+    option
     select_runner
+  end
+  
+  def self.option
+    @options, @parser = Rad::Option.parse
   end
 
   def self.config
@@ -18,10 +23,9 @@ class Rad
     elsif ARGV[0] == "test"
       Rad::Test.run
     elsif ARGV[0] == "create"
-      options, parser = OptionParser.parse(ARGV)
       sketch_name = ARGV[1]
-      parser.parse!(["-h"]) unless sketch_name
-      Rad::Build.run sketch_name, options
+      @parser.parse!(["-h"]) unless sketch_name
+      Rad::Build.run sketch_name, @options
     end
   end
 end

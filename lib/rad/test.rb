@@ -13,8 +13,8 @@ module Rad::Test
     `cd #{test_dir}; make upload`
 
     # find the USB port to make sure the Arduino's actually plugged in
-    options, parser = OptionParser.parse(ARGV)
-    usb_port = options["hardware"]["serial_port"]
+    options, parser = Rad::Option.parse
+    usb_port = options["serial_port"]
     port_name = usb_port.split("/").last
     port_dir = usb_port.split("/")[0..(usb_port.split("/").length-2)].join("/")
     unless `ls #{port_dir}`.split(/\n/).any?{|d| d.match(/#{port_name}/)}

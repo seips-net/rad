@@ -15,7 +15,6 @@
 * implement better testing
 * check plugins/*.rb for updates
 * check examples/*.rb for updates
-* clean up rad/option_parser like http://www.ruby-doc.org/stdlib/libdoc/optparse/rdoc/classes/OptionParser.html
 * set usefull default options and make them overwriteable by ~/.rad/options.yaml
 * add progressbar to Rad::Installer::*.download
 * check old todos, move or delete the old todos
