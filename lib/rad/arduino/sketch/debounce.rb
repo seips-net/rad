@@ -1,7 +1,7 @@
 # Rad library debounce
 # outdated?
 
-module Rad::ArduinoSketch::Debounce
+module Rad::Arduino::Sketch::Debounce
 
   def initialize #:nodoc:
     @debounce_settings = []

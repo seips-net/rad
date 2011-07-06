@@ -1,10 +1,10 @@
-# Rad library i2c
+# Rad library ethernet
 # outdated?
 
-module Rad::ArduinoSketch::Onewire
+module Rad::Arduino::Sketch::Ethernet
 
   def output_pin_onewire(num, opts={})
-    one_wire(num, opts)
+    ethernet(num, opts)
     return # don't use declarations, accessor, signatures below
   end
 

@@ -1,7 +1,7 @@
 # Rad library sf_lcd
 # outdated?
 
-module Rad::ArduinoSketch::SfLcd
+module Rad::Arduino::Sketch::SfLcd
 
   def output_pin_sf_lcd(num, opts={})
     sf_lcd_setup(num, opts)

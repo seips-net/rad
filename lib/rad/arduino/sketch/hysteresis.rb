@@ -1,7 +1,7 @@
 # Rad library hysteresis
 # outdated?
 
-module Rad::ArduinoSketch::Hysteresis
+module Rad::Arduino::Sketch::Hysteresis
   def initialize #:nodoc:
     @hysteresis_settings = []
     @hysteresis_pins = []

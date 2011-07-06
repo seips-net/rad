@@ -1,4 +1,4 @@
-class BlinkMAddressAssignment < ArduinoSketch
+class BlinkMAddressAssignment < Arduino::Sketch
 
   # want to use more than one blink m?
   # since each blink m arrives with the same address, 

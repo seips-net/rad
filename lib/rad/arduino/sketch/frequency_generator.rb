@@ -1,7 +1,7 @@
 # Rad library frequency_timer/frequency_generator
 # outdated?
 
-module Rad::ArduinoSketch::FrequencyGenerator
+module Rad::Arduino::Sketch::FrequencyGenerator
 
   def output_pin_frequency_generator(num, opts={})
     frequency_timer(num, opts)

@@ -1,7 +1,7 @@
 # Arduino standard library servo
 # http://arduino.cc/en/Reference/Servo
 
-module Rad::ArduinoSketch::Servo
+module Rad::Arduino::Sketch::Servo
 
   def initialize #:nodoc:
     @servo_settings = []

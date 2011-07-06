@@ -151,14 +151,13 @@
 #   most notably, we keep track of all external variables and let the translator know they exist 
 #
 
-class Rad::ArduinoSketch
+class Rad::Arduino::Sketch
   
   include Rad::ExternalVariableProcessing
 
-  RAD_LIB.join('rad','arduino_sketch').children.each do |c|
+  RAD_LIB.join('rad','arduino','sketch').children.each do |c|
     s = c.basename('.rb').to_s
-    next if s == 'hardware_library' # workaround #todo move hardware library to another directory
-    m = ('Rad::ArduinoSketch::' + s.camelize).constantize
+    m = ('Rad::Arduino::Sketch::' + s.camelize).constantize
     include m
   end
   

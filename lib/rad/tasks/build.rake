@@ -41,7 +41,7 @@ namespace :build do
   task :setup do
     Kernel.const_set @sketch.klass, Class.new(ArduinoSketch)
 
-    @@as = Rad::ArduinoSketch::HardwareLibrary.new
+    @@as = Rad::Arduino::Sketch::HardwareLibrary.new
 
     delegate_methods = @@as.methods - Object.new.methods
     delegate_methods.reject!{|m| m == "compose_setup"}

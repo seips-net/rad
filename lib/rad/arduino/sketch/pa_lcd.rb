@@ -1,7 +1,7 @@
 # Rad library pa_lcd
 # outdated?
 
-module Rad::ArduinoSketch::PaLcd
+module Rad::Arduino::Sketch::PaLcd
 
   def output_pin_pa_lcd(num, opts={})
     pa_lcd_setup(num, opts)

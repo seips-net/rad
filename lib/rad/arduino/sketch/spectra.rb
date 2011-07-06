@@ -1,7 +1,7 @@
 # Rad library spectra
 # outdated?
 
-module Rad::ArduinoSketch::Spectra
+module Rad::Arduino::Sketch::Spectra
 
   def initialize #:nodoc:
     @spectra_settings = []

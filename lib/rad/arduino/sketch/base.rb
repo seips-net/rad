@@ -1,4 +1,4 @@
-module Rad::ArduinoSketch::Base
+module Rad::Arduino::Sketch::Base
 
   # Add a comment box like this:
   # ///////////////...///////////////
