@@ -73,23 +73,14 @@ class Rad::Build
   end
   
   def self.config
-    FileUtils.mkdir_p "#{@sketch_name}/config"
 
-    FileUtils.touch "#{@sketch_name}/config/hardware.yml"
-    FileUtils.touch "#{@sketch_name}/config/software.yml"
-
-    hardware = @options["hardware"].to_yaml
-    software = @options["software"].to_yaml
-
-    template = File.read(RAD_LIB + 'templates' + 'config_hardware.erb')
+    FileUtils.touch "#{@sketch_name}/config.yml"
+    
+    config = @options.to_yaml
+    template = File.read(RAD_LIB + 'templates' + 'config.erb')
     erb = ERB.new(template)
-    File.open("#{@sketch_name}/config/hardware.yml", 'w') do |file|
-      file.write erb.result(binding)
-    end
-
-    template = File.read(RAD_LIB + 'templates' + 'config_software.erb')
-    erb = ERB.new(template)
-    File.open("#{@sketch_name}/config/software.yml", 'w') do |file|
+    
+    File.open("#{@sketch_name}/config.yml", 'w') do |file|
       file.write erb.result(binding)
     end
   end

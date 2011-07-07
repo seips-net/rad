@@ -2,7 +2,7 @@ namespace :make do
 
   desc "compile the sketch and then upload it to your Arduino board"
   task :upload => :compile do
-    if Rad::Makefile.hardware_params['physical_reset']
+    if Rad::Makefile.params['physical_reset']
       puts "Reset the Arduino and hit enter.\n==If your board doesn't need it, you can turn off this prompt in config/software.yml=="
       STDIN.gets.chomp
     end

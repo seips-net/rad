@@ -1,0 +1,3 @@
+class Rad::Arduino
+  
+end

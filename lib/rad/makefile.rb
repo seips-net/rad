@@ -6,16 +6,16 @@ class Rad::Makefile
     
     # build the sketch Makefile for the given template based on the values in its software and hardware config files
     def compose_for_sketch(build_dir)
-      params = hardware_params.merge software_params
-      arduino_root = Pathname.new @software_params['arduino_root']
-      board_config = board_configuration(arduino_root, @hardware_params['mcu'])
-      params = params.merge board_config
-      params['target'] = build_dir.split.last
+      params
+      arduino_root = Pathname.new @params['arduino_root']
+      board_config = board_configuration(arduino_root, @params['mcu'])
+      @params.merge! board_config
+      @params['target'] = build_dir.split.last
       #params['libraries_root'] = PROJECT_ROOT.join('vendor','libraries')
-      params['libraries'] = $load_libraries # load only libraries used 
+      @params['libraries'] = $load_libraries # load only libraries used 
       # needed along with ugly hack of including another copy of twi.h in wire, when using the Wire.h library
-      params['twi_c'] = $load_libraries.include?("Wire") ? params['arduino_root'].join('hardware','libraries','Wire','utility','twi.c') : ''
-      params['asm_files'] = PROJECT_ROOT.join(PROJECT_ROOT).children.select{ |c| c.file? }
+      @params['twi_c'] = $load_libraries.include?("Wire") ? p['arduino_root'].join('hardware','libraries','Wire','utility','twi.c') : ''
+      @params['asm_files'] = PROJECT_ROOT.join(PROJECT_ROOT).children.select{ |c| c.file? }
             
       e = ERB.new File.read(RAD_LIB.join('templates','makefile.erb'))
       
@@ -23,13 +23,9 @@ class Rad::Makefile
         f << e.result(binding)
       end
     end
-        
-    def hardware_params
-      @hardware_params ||= YAML.load_file(PROJECT_ROOT.join('config','hardware.yml'))
-    end
-      
-    def software_params
-      @software_params ||= YAML.load_file(PROJECT_ROOT.join('config','software.yml'))
+    
+    def params
+      @params ||= YAML.load_file(PROJECT_ROOT.join('config.yml'))
     end
     
     ## match the mcu with the proper board configuration from the arduino board.txt file
