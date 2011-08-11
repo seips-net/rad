@@ -14,7 +14,7 @@ namespace :make do
     Rad::Makefile.compose_for_sketch( @sketch.build_dir )
 
     # not allowed? sh %{export PATH=#{Rad::Makefile.software_params[:arduino_root]}/tools/avr/bin:$PATH}
-    sh %{cd #{@sketch.build_dir}; #{@make} depend; #{@make}}
+    sh %{cd #{@sketch.build_dir.to_s}; #{@make.to_s} depend; #{@make.to_s}}
   end
 
   desc "generate a makefile and use it to compile the .cpp using the current .cpp file"
